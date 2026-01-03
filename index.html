@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Bitunix — Entradas → Promedio / Liq / TP1-TP2 (iPhone)</title>
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#0f172a;
+      --panel: rgba(17,24,39,.78);
+      --card: rgba(2,6,23,.62);
+      --border: rgba(148,163,184,.14);
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --cyan:#22d3ee;
+      --btn:#0c1322;
+
+      --greenDark: rgba(16, 98, 56, .55);
+      --greenOn:   rgba(34,197,94,.85);
+      --redDark:   rgba(120, 24, 24, .55);
+      --redOn:     rgba(239,68,68,.85);
+
+      --ok:#22c55e;
+      --bad:#ef4444;
+
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(34,211,238,.08), transparent 55%),
+                  radial-gradient(900px 700px at 85% 25%, rgba(34,197,94,.06), transparent 55%),
+                  linear-gradient(160deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Inter, Roboto, Ubuntu, sans-serif;
+    }
+
+    .wrap{
+      max-width: 720px;
+      margin: 14px auto 26px;
+      padding: 0 14px 22px;
+    }
+
+    .title{
+      font-size: 18px;
+      font-weight: 800;
+      margin: 12px 2px 10px;
+      letter-spacing: .2px;
+    }
+
+    .card{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .grid{
+      display:grid;
+      gap:10px;
+    }
+    .g2{ grid-template-columns: 1fr 1fr; }
+    .g3{ grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 420px){
+      .g3{ grid-template-columns: 1fr; }
+    }
+
+    label{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 6px;
+    }
+
+    input, button{
+      font: inherit;
+    }
+
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      background: rgba(2, 6, 23, .55);
+      color: var(--text);
+      border: 1px solid rgba(148,163,184,.16);
+      outline:none;
+    }
+    input:focus{
+      border-color: rgba(34,211,238,.55);
+      box-shadow: 0 0 0 3px rgba(34,211,238,.14);
+    }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top: 10px;
+    }
+
+    .btn{
+      border: 1px solid rgba(148,163,184,.16);
+      background: rgba(12,19,34,.85);
+      color: var(--text);
+      padding: 12px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      user-select:none;
+    }
+    .btn:active{ transform: scale(.99); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(34,211,238,.95), rgba(14,165,233,.95));
+      border: none;
+      color: #06121a;
+      font-weight: 800;
+    }
+
+    .pillRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .pill{
+      border-radius: 14px;
+      padding: 12px 10px;
+      border: 1px solid rgba(148,163,184,.16);
+      background: rgba(2,6,23,.35);
+      text-align:center;
+      font-weight: 800;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    /* Side buttons */
+    .pill.short{ background: var(--redDark); }
+    .pill.long{  background: var(--greenDark); }
+    .pill.short.active{ background: var(--redOn); color:#140607; }
+    .pill.long.active{  background: var(--greenOn); color:#06140b; }
+
+    /* Strategy buttons */
+    .pill.strategy{ background: rgba(2,6,23,.35); }
+    .pill.strategy.active{
+      background: rgba(148,163,184,.16);
+      border-color: rgba(34,211,238,.35);
+      box-shadow: 0 0 0 3px rgba(34,211,238,.08);
+    }
+
+    .chips{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin: 10px 0 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .chip{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(148,163,184,.14);
+      background: rgba(2,6,23,.35);
+      white-space:nowrap;
+    }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      overflow:hidden;
+      border-radius: 14px;
+    }
+    th, td{
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(148,163,184,.12);
+      font-size: 13px;
+    }
+    th{ color: var(--muted); text-align:left; font-weight: 700; }
+    td.r, th.r{ text-align:right; }
+    tr:last-child td{ border-bottom:none; }
+
+    .tbtn{
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,.16);
+      background: rgba(2,6,23,.35);
+      color: var(--text);
+      cursor:pointer;
+      font-weight:800;
+    }
+
+    .kpiGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:10px;
+      margin-top: 12px;
+    }
+    @media (max-width: 520px){
+      .kpiGrid{ grid-template-columns: 1fr; }
+    }
+    .kpi{
+      background: rgba(2,6,23,.45);
+      border: 1px solid rgba(148,163,184,.12);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .kpi .t{ font-size: 12px; color: var(--muted); }
+    .kpi .v{ font-size: 18px; font-weight: 900; margin-top: 6px; letter-spacing:.2px; }
+    .up{ color: var(--ok); }
+    .down{ color: var(--bad); }
+
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 520px){
+      .twoCol{ grid-template-columns: 1fr; }
+    }
+
+    .small{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+      line-height: 1.35;
+    }
+
+    .copyBtn{
+      margin-left: 8px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,.16);
+      background: rgba(2,6,23,.35);
+      color: var(--text);
+      cursor:pointer;
+      font-weight:800;
+    }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(2,6,23,.86);
+      border: 1px solid rgba(148,163,184,.18);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .18s ease;
+    }
+    .toast.show{ opacity: 1; }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="title">Bitunix — Entradas → Promedio / Liq / TP1-TP2 (con preview)</div>
+
+    <div class="card">
+      <!-- Side -->
+      <label>Lado</label>
+      <div class="pillRow" id="sideRow">
+        <div class="pill short active" data-side="short">Short</div>
+        <div class="pill long" data-side="long">Long</div>
+      </div>
+
+      <!-- Strategy -->
+      <div style="height:10px"></div>
+      <label>Estrategia</label>
+      <div class="pillRow" id="strRow">
+        <div class="pill strategy active" data-str="ema8">EMA8</div>
+        <div class="pill strategy" data-str="boll">Bollinger</div>
+      </div>
+
+      <!-- Entry preview inputs -->
+      <div style="height:12px"></div>
+      <div class="grid g3">
+        <div>
+          <label>Entrada</label>
+          <input id="inPrice" inputmode="decimal" placeholder="Ej: 223.59" value="">
+        </div>
+        <div>
+          <label>Lev (x)</label>
+          <input id="inLev" inputmode="decimal" placeholder="Ej: 30" value="30">
+        </div>
+        <div>
+          <label>Margen</label>
+          <input id="inMargin" inputmode="decimal" placeholder="Ej: 50" value="50">
+        </div>
+      </div>
+
+      <div class="btnRow">
+        <button class="btn primary" id="btnAdd">Añadir entrada</button>
+        <button class="btn" id="btnReset">Reset</button>
+      </div>
+
+      <div class="chips">
+        <div class="chip" id="chipMargin">Margin total: —</div>
+        <div class="chip" id="chipQty">Qty total: —</div>
+        <div class="chip" id="chipMode">Modo: PREVIEW</div>
+      </div>
+
+      <!-- Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th class="r">Precio</th>
+            <th class="r">Lev</th>
+            <th class="r">Margen</th>
+            <th class="r">Qty</th>
+            <th class="r">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+
+      <!-- Targets -->
+      <div style="height:12px"></div>
+      <div class="grid g3">
+        <div>
+          <label>TP1 (precio, opcional)</label>
+          <input id="tp1Price" inputmode="decimal" placeholder="vacío = usa % estrategia">
+        </div>
+        <div>
+          <label>SL (precio, opcional)</label>
+          <input id="slPrice" inputmode="decimal" placeholder="vacío = usa % estrategia">
+        </div>
+        <div>
+          <label>TP2 (precio, opcional)</label>
+          <input id="tp2Price" inputmode="decimal" placeholder="cierre TOTAL 100%">
+        </div>
+      </div>
+
+      <!-- Settings minimal -->
+      <div style="height:10px"></div>
+      <div class="grid g3">
+        <div>
+          <label>Fee ida+vuelta % (peor caso)</label>
+          <input id="feeRt" inputmode="decimal" value="0.06">
+        </div>
+        <div>
+          <label>MMR % (liq aprox.)</label>
+          <input id="mmr" inputmode="decimal" value="1">
+        </div>
+        <div>
+          <label>Fee cierre % (solo liq)</label>
+          <input id="feeClose" inputmode="decimal" value="0.03">
+        </div>
+      </div>
+
+      <div class="small" id="ruleLine">—</div>
+
+      <!-- KPIs -->
+      <div class="kpiGrid">
+        <div class="kpi">
+          <div class="t">Promedio</div>
+          <div class="v" id="kAvg">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">Liq (aprox.)</div>
+          <div class="v" id="kLiq">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">Lev efectivo</div>
+          <div class="v" id="kLevEff">—</div>
+        </div>
+      </div>
+
+      <div class="twoCol">
+        <div class="kpi">
+          <div class="t">ROE neto (TP1 / TP2 / SL)</div>
+          <div class="v" id="kRoe">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">P/L neto @ TP1 (parcial)</div>
+          <div class="v" id="kPl1">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">P/L neto @ TP2 (cierre total)</div>
+          <div class="v" id="kPl2">—</div>
+        </div>
+      </div>
+
+      <div class="twoCol">
+        <div class="kpi">
+          <div class="t">P/L neto @ SL (cierre total)</div>
+          <div class="v" id="kPlS">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">TP1 usado</div>
+          <div class="v" id="kTp1Used">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">TP2 usado</div>
+          <div class="v" id="kTp2Used">—</div>
+        </div>
+      </div>
+
+      <div class="twoCol">
+        <div class="kpi">
+          <div class="t">Qty total (Bitunix)</div>
+          <div class="v" id="kQtyTotal">— <button class="copyBtn" id="copyQtyTotal">Copiar</button></div>
+        </div>
+        <div class="kpi">
+          <div class="t">Qty parcial (según estrategia)</div>
+          <div class="v" id="kQtyPart">— <button class="copyBtn" id="copyQtyPart">Copiar</button></div>
+        </div>
+        <div class="kpi">
+          <div class="t">Parcial %</div>
+          <div class="v" id="kPartPct">—</div>
+        </div>
+      </div>
+
+      <div class="small">
+        Notas: (1) Preview calcula usando <b>entradas guardadas + la entrada que estás tipeando</b>. (2) P/L/ROE usan fee “ida+vuelta” (peor caso) sobre NOTIONAL cerrado. (3) Liq es aproximada con MMR fijo + fee de cierre.
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Copiado</div>
+
+<script>
+(() => {
+  // ---------- Helpers ----------
+  const $ = (id) => document.getElementById(id);
+  const toNum = (v) => {
+    if (v == null) return NaN;
+    const s = String(v).trim().replace(/\s+/g,'').replace(/,/g,'.');
+    const n = parseFloat(s);
+    return Number.isFinite(n) ? n : NaN;
+  };
+  const fmt = (x, d=6) => Number.isFinite(x)
+    ? x.toLocaleString(undefined, {maximumFractionDigits:d, minimumFractionDigits: Math.min(2,d)})
+    : "—";
+  const fmt2 = (x) => Number.isFinite(x)
+    ? x.toLocaleString(undefined, {maximumFractionDigits:2, minimumFractionDigits:2})
+    : "—";
+  const showToast = (msg="Copiado") => {
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 900);
+  };
+  const clamp0 = (x) => (Number.isFinite(x) ? Math.max(0, x) : NaN);
+
+  // ---------- Strategy presets (ajústalos aquí) ----------
+  const STRATS = {
+    ema8: { name: "EMA8", tp1Pct: 0.4, slPct: 0.4, partialPct: 60 },
+    boll: { name: "Bollinger", tp1Pct: 0.6, slPct: 0.5, partialPct: 50 },
+  };
+
+  // ---------- State ----------
+  const st = {
+    side: "short",
+    strat: "ema8",
+    legs: [],        // committed entries
+    editIndex: -1
+  };
+
+  // ---------- Core math ----------
+  // USDT-margined linear futures approx:
+  // qty_i = (margin_i * lev_i) / price_i
+  function qtyFromLeg(price, lev, margin){
+    return (margin * lev) / price;
+  }
+
+  function totals(legs){
+    let qty = 0, wpx = 0, marginTot = 0;
+    for (const l of legs){
+      const q = qtyFromLeg(l.price, l.lev, l.margin);
+      qty += q;
+      wpx += l.price * q;
+      marginTot += l.margin;
+    }
+    const avg = qty > 0 ? (wpx / qty) : NaN;
+    const notional = Number.isFinite(avg) ? qty * avg : NaN;
+    const levEff = (marginTot > 0 && Number.isFinite(notional)) ? (notional / marginTot) : NaN;
+    return { qty, wpx, avg, marginTot, notional, levEff };
+  }
+
+  // Gross PnL (no fees)
+  function pnlGross(side, qty, avg, closePrice){
+    if (!(qty > 0 && avg > 0 && closePrice > 0)) return NaN;
+    return side === "long"
+      ? qty * (closePrice - avg)
+      : qty * (avg - closePrice);
+  }
+
+  // Fees worst-case round-trip on notional CLOSED
+  function feesRoundTrip(notionalClosed, feeRtPct){
+    if (!(notionalClosed > 0 && feeRtPct >= 0)) return NaN;
+    return notionalClosed * (feeRtPct / 100);
+  }
+
+  // Liquidation (approx) using MMR + close-fee
+  // We use an approximation similar to what you already used:
+  // long:  liq = (Q*avg - M) / (Q*(1 - a))
+  // short: liq = (M + Q*avg) / (Q*(1 + a))
+  // where a = mmr + feeClose
+  function liqApprox(side, qty, avg, marginTot, mmrPct, feeClosePct){
+    if (!(qty > 0 && avg > 0 && marginTot >= 0)) return NaN;
+    const a = Math.max(0, (mmrPct + feeClosePct) / 100);
+    if (side === "long"){
+      const den = qty * (1 - a);
+      if (!(den > 0)) return NaN;
+      return (qty * avg - marginTot) / den;
+    } else {
+      return (marginTot + qty * avg) / (qty * (1 + a));
+    }
+  }
+
+  // Price from avg and pct
+  function priceFromPct(side, avg, pct){
+    const p = pct / 100;
+    if (!(avg > 0 && p >= 0)) return NaN;
+    // TP: long up, short down. SL: long down, short up (we handle outside)
+    // This function just applies "move in favorable direction":
+    return side === "long" ? avg * (1 + p) : avg * (1 - p);
+  }
+
+  function slPriceFromPct(side, avg, pct){
+    const p = pct / 100;
+    if (!(avg > 0 && p >= 0)) return NaN;
+    // SL adverse direction:
+    return side === "long" ? avg * (1 - p) : avg * (1 + p);
+  }
+
+  // ---------- UI rendering ----------
+  function setActivePills(){
+    // side
+    document.querySelectorAll("#sideRow .pill").forEach(p => {
+      p.classList.toggle("active", p.dataset.side === st.side);
+    });
+    // strategy
+    document.querySelectorAll("#strRow .pill").forEach(p => {
+      p.classList.toggle("active", p.dataset.str === st.strat);
+    });
+  }
+
+  function renderTable(){
+    const tb = $("tbody");
+    tb.innerHTML = "";
+    st.legs.forEach((l, i) => {
+      const q = qtyFromLeg(l.price, l.lev, l.margin);
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${i+1}</td>
+        <td class="r">${fmt(l.price,6)}</td>
+        <td class="r">${fmt(l.lev,2)}×</td>
+        <td class="r">${fmt(l.margin,2)}</td>
+        <td class="r">${fmt(q,6)}</td>
+        <td class="r">
+          <button class="tbtn" data-edit="${i}">Editar</button>
+          <button class="tbtn" data-del="${i}">Borrar</button>
+        </td>
+      `;
+      tb.appendChild(tr);
+    });
+
+    // preview row (ghost) if inputs valid
+    const p = toNum($("inPrice").value);
+    const L = toNum($("inLev").value);
+    const m = toNum($("inMargin").value);
+    if (p>0 && L>0 && m>0){
+      const q = qtyFromLeg(p, L, m);
+      const tr = document.createElement("tr");
+      tr.style.opacity = ".75";
+      tr.style.fontStyle = "italic";
+      tr.innerHTML = `
+        <td>—</td>
+        <td class="r">${fmt(p,6)}</td>
+        <td class="r">${fmt(L,2)}×</td>
+        <td class="r">${fmt(m,2)}</td>
+        <td class="r">${fmt(q,6)}</td>
+        <td class="r" style="color: var(--muted);">Preview</td>
+      `;
+      tb.appendChild(tr);
+    }
+  }
+
+  function computeAndPaint(){
+    // Build combined legs = committed + preview (if valid)
+    const legs = [...st.legs];
+    const p = toNum($("inPrice").value);
+    const L = toNum($("inLev").value);
+    const m = toNum($("inMargin").value);
+    const hasPreview = (p>0 && L>0 && m>0);
+    if (hasPreview){
+      legs.push({price:p, lev:L, margin:m});
+    }
+
+    const { qty, avg, marginTot, levEff } = totals(legs);
+
+    // Chips
+    $("chipMargin").textContent = `Margin total: ${Number.isFinite(marginTot) ? fmt2(marginTot) : "—"}`;
+    $("chipQty").textContent = `Qty total: ${Number.isFinite(qty) ? fmt(qty,6) : "—"}`;
+    $("chipMode").textContent = hasPreview ? "Modo: PREVIEW" : "Modo: FIJO";
+
+    // Rule line
+    const s = STRATS[st.strat];
+    $("ruleLine").textContent = `${s.name}: TP1 ${s.tp1Pct}% | SL ${s.slPct}% | Parcial ${s.partialPct}%`;
+
+    // KPIs base
+    $("kAvg").textContent = fmt(avg,6);
+    $("kLevEff").textContent = Number.isFinite(levEff) ? `${fmt(levEff,2)}×` : "—";
+
+    // Liq
+    const mmrPct = clamp0(toNum($("mmr").value));
+    const feeClosePct = clamp0(toNum($("feeClose").value));
+    const liq = liqApprox(st.side, qty, avg, marginTot, mmrPct, feeClosePct);
+    $("kLiq").textContent = fmt(liq,6);
+
+    // TP/SL used prices
+    const feeRtPct = clamp0(toNum($("feeRt").value));
+
+    // TP1: override or strat %
+    let tp1Used = NaN;
+    const tp1Ov = toNum($("tp1Price").value);
+    if (tp1Ov > 0) tp1Used = tp1Ov;
+    else if (avg > 0) tp1Used = priceFromPct(st.side, avg, s.tp1Pct);
+
+    // SL: override or strat %
+    let slUsed = NaN;
+    const slOv = toNum($("slPrice").value);
+    if (slOv > 0) slUsed = slOv;
+    else if (avg > 0) slUsed = slPriceFromPct(st.side, avg, s.slPct);
+
+    // TP2: optional override only
+    let tp2Used = NaN;
+    const tp2Ov = toNum($("tp2Price").value);
+    if (tp2Ov > 0) tp2Used = tp2Ov;
+
+    $("kTp1Used").textContent = Number.isFinite(tp1Used) ? fmt(tp1Used,6) : "—";
+    $("kTp2Used").textContent = Number.isFinite(tp2Used) ? fmt(tp2Used,6) : "—";
+
+    // Qty outputs + copy
+    $("kQtyTotal").firstChild.textContent = Number.isFinite(qty) ? `${fmt(qty,6)} ` : "— ";
+    const partialPct = s.partialPct / 100;
+    const qtyPart = (qty>0) ? qty * partialPct : NaN;
+    $("kQtyPart").firstChild.textContent = Number.isFinite(qtyPart) ? `${fmt(qtyPart,6)} ` : "— ";
+    $("kPartPct").textContent = `${s.partialPct}%`;
+
+    // PnL / ROE net with fees
+    // TP1 net is on qtyPart closed at tp1Used
+    const notionalPartAtClose = (Number.isFinite(qtyPart) && Number.isFinite(tp1Used)) ? (qtyPart * tp1Used) : NaN;
+    const pl1Gross = (Number.isFinite(tp1Used) ? pnlGross(st.side, qtyPart, avg, tp1Used) : NaN);
+    const pl1Fees  = feesRoundTrip(notionalPartAtClose, feeRtPct);
+    const pl1Net   = (Number.isFinite(pl1Gross) && Number.isFinite(pl1Fees)) ? (pl1Gross - pl1Fees) : NaN;
+
+    // TP2 net is on TOTAL qty closed at tp2Used (cierre total 100%)
+    const notionalTotAtTP2 = (Number.isFinite(qty) && Number.isFinite(tp2Used)) ? (qty * tp2Used) : NaN;
+    const pl2Gross = (Number.isFinite(tp2Used) ? pnlGross(st.side, qty, avg, tp2Used) : NaN);
+    const pl2Fees  = feesRoundTrip(notionalTotAtTP2, feeRtPct);
+    const pl2Net   = (Number.isFinite(pl2Gross) && Number.isFinite(pl2Fees)) ? (pl2Gross - pl2Fees) : NaN;
+
+    // SL net is on TOTAL qty closed at slUsed
+    const notionalTotAtSL = (Number.isFinite(qty) && Number.isFinite(slUsed)) ? (qty * slUsed) : NaN;
+    const plSGross = (Number.isFinite(slUsed) ? pnlGross(st.side, qty, avg, slUsed) : NaN);
+    const plSFees  = feesRoundTrip(notionalTotAtSL, feeRtPct);
+    const plSNet   = (Number.isFinite(plSGross) && Number.isFinite(plSFees)) ? (plSGross - plSFees) : NaN;
+
+    // ROE uses margin total
+    const roe1 = (Number.isFinite(pl1Net) && marginTot>0) ? (pl1Net / marginTot) * 100 : NaN;
+    const roe2 = (Number.isFinite(pl2Net) && marginTot>0) ? (pl2Net / marginTot) * 100 : NaN;
+    const roeS = (Number.isFinite(plSNet) && marginTot>0) ? (plSNet / marginTot) * 100 : NaN;
+
+    // Paint values
+    $("kPl1").innerHTML = Number.isFinite(pl1Net)
+      ? `<span class="${pl1Net>=0?'up':'down'}">${fmt2(pl1Net)} USDT</span>`
+      : "—";
+    $("kPl2").innerHTML = Number.isFinite(pl2Net)
+      ? `<span class="${pl2Net>=0?'up':'down'}">${fmt2(pl2Net)} USDT</span>`
+      : "—";
+    $("kPlS").innerHTML = Number.isFinite(plSNet)
+      ? `<span class="${plSNet>=0?'up':'down'}">${fmt2(plSNet)} USDT</span>`
+      : "—";
+
+    const roeTxt = `${Number.isFinite(roe1)? fmt2(roe1)+'%':'—'} / ${Number.isFinite(roe2)? fmt2(roe2)+'%':'—'} / ${Number.isFinite(roeS)? fmt2(roeS)+'%':'—'}`;
+    $("kRoe").textContent = roeTxt;
+
+    renderTable();
+  }
+
+  // ---------- Actions ----------
+  function addOrSave(){
+    const p = toNum($("inPrice").value);
+    const L = toNum($("inLev").value);
+    const m = toNum($("inMargin").value);
+    if(!(p>0 && L>0 && m>0)){
+      alert("Completa Entrada, Lev y Margen (>0).");
+      return;
+    }
+    if(st.editIndex >= 0){
+      st.legs[st.editIndex] = { price:p, lev:L, margin:m };
+      st.editIndex = -1;
+      $("btnAdd").textContent = "Añadir entrada";
+      $("chipMode").textContent = "Modo: PREVIEW";
+    }else{
+      st.legs.push({ price:p, lev:L, margin:m });
+    }
+
+    // Dejar la entrada vacía para el próximo cálculo rápido (como pediste)
+    $("inPrice").value = "";
+    // (lev y margen se mantienen porque suelen ser constantes)
+    computeAndPaint();
+  }
+
+  function resetAll(){
+    st.legs = [];
+    st.editIndex = -1;
+    $("btnAdd").textContent = "Añadir entrada";
+    $("inPrice").value = "";
+    $("tp1Price").value = "";
+    $("slPrice").value = "";
+    $("tp2Price").value = "";
+    computeAndPaint();
+  }
+
+  // ---------- Events ----------
+  document.querySelectorAll("#sideRow .pill").forEach(p => {
+    p.addEventListener("click", () => {
+      st.side = p.dataset.side;
+      setActivePills();
+      computeAndPaint();
+    });
+  });
+
+  document.querySelectorAll("#strRow .pill").forEach(p => {
+    p.addEventListener("click", () => {
+      st.strat = p.dataset.str;
+      setActivePills();
+      computeAndPaint();
+    });
+  });
+
+  $("btnAdd").addEventListener("click", addOrSave);
+  $("btnReset").addEventListener("click", resetAll);
+
+  $("tbody").addEventListener("click", (e) => {
+    const btn = e.target;
+    const ed = btn.getAttribute("data-edit");
+    const del = btn.getAttribute("data-del");
+    if(ed !== null){
+      const i = parseInt(ed,10);
+      const l = st.legs[i];
+      $("inPrice").value = l.price;
+      $("inLev").value = l.lev;
+      $("inMargin").value = l.margin;
+      st.editIndex = i;
+      $("btnAdd").textContent = "Guardar";
+      computeAndPaint();
+    }
+    if(del !== null){
+      const i = parseInt(del,10);
+      st.legs.splice(i,1);
+      if(st.editIndex === i){
+        st.editIndex = -1;
+        $("btnAdd").textContent = "Añadir entrada";
+      }
+      computeAndPaint();
+    }
+  });
+
+  // Live preview on any input change
+  [
+    "inPrice","inLev","inMargin",
+    "tp1Price","slPrice","tp2Price",
+    "feeRt","mmr","feeClose"
+  ].forEach(id => {
+    $(id).addEventListener("input", computeAndPaint);
+  });
+
+  // Copy buttons
+  $("copyQtyTotal").addEventListener("click", async () => {
+    const txt = $("kQtyTotal").firstChild.textContent.trim();
+    if(!txt || txt==="—") return;
+    try { await navigator.clipboard.writeText(txt.replace(/\s+/g,'')); showToast("Qty total copiado"); }
+    catch { showToast("No se pudo copiar"); }
+  });
+
+  $("copyQtyPart").addEventListener("click", async () => {
+    const txt = $("kQtyPart").firstChild.textContent.trim();
+    if(!txt || txt==="—") return;
+    try { await navigator.clipboard.writeText(txt.replace(/\s+/g,'')); showToast("Qty parcial copiado"); }
+    catch { showToast("No se pudo copiar"); }
+  });
+
+  // init
+  setActivePills();
+  computeAndPaint();
+})();
+</script>
+</body>
+</html>
