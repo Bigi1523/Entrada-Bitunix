@@ -14,14 +14,11 @@
     --text:#e7eefc;
     --muted:rgba(231,238,252,.65);
 
-    --long:#16a34a;
-    --short:#dc2626;
     --longOn:rgba(22,163,74,.22);
     --shortOn:rgba(220,38,38,.18);
 
     --ok:#22c55e;
     --bad:#ef4444;
-    --warn:#f59e0b;
 
     --shadow: 0 10px 25px rgba(0,0,0,.35);
     --radius:18px;
@@ -78,8 +75,6 @@
     transition:transform .06s ease, filter .15s ease, background .15s ease, border-color .15s ease;
   }
   .segBtn:active{transform:scale(.99)}
-  .segBtn.short{background: rgba(220,38,38,.10)}
-  .segBtn.long{background: rgba(22,163,74,.10)}
   .segBtn.short.on{background: var(--shortOn); border-color: rgba(220,38,38,.35)}
   .segBtn.long.on{background: var(--longOn); border-color: rgba(22,163,74,.35)}
   .segBtn.on{filter:brightness(1.05)}
@@ -158,16 +153,21 @@
   .pill.preview{border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10)}
   .pill.ok{border-color: rgba(34,197,94,.30); background: rgba(34,197,94,.10)}
 
+  /* TABLA */
   .tableWrap{
     margin-top:10px;
-    overflow-x:auto; /* clave para iPhone */
+    overflow-x:auto; /* desktop/tablet ok */
     border-radius:18px;
     border:1px solid rgba(255,255,255,.07);
     background: rgba(0,0,0,.14);
   }
-  table{width:100%; min-width:620px; border-collapse:collapse}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    min-width: 0; /* <<< IMPORTANTE: ya no empuja acciones fuera */
+  }
   th,td{
-    padding:8px 10px;  /* menos espacio */
+    padding:8px 10px;
     border-bottom:1px solid rgba(255,255,255,.07);
     font-size:13px;
     color: rgba(231,238,252,.90);
@@ -178,6 +178,7 @@
   td.r, th.r{text-align:right}
   tr:last-child td{border-bottom:none}
   tr.preview td{opacity:.78; font-style:italic}
+
   .actions{
     display:flex; gap:8px; justify-content:flex-end; align-items:center;
   }
@@ -191,7 +192,7 @@
     cursor:pointer;
   }
 
-  /* TP row (compact) */
+  /* TP row */
   .tpRow{
     display:grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -206,7 +207,7 @@
     font-weight:800;
   }
 
-  /* KPIs (emparejados) */
+  /* KPIs emparejados */
   .kpiGrid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -226,12 +227,7 @@
   .down{color:var(--bad)}
   .muted{color:var(--muted)}
 
-  /* Copyable used targets */
-  .copyable{
-    position:relative;
-    cursor:pointer;
-    user-select:none;
-  }
+  .copyable{cursor:pointer; user-select:none;}
   .copyable:active{transform:scale(.995)}
   .copyTag{
     margin-top:8px;
@@ -262,6 +258,18 @@
     line-height:1.35;
   }
 
+  /* ======= RESPONSIVE iPHONE: acciones siempre visibles ======= */
+  @media (max-width: 480px){
+    th,td{font-size:12px; padding:8px 8px;}
+    .miniBtn{padding:7px 9px; font-size:12px;}
+
+    /* ocultar Qty para que quepa Acciones */
+    .col-qty{display:none;}
+    /* si aún queda apretado, podés ocultar margen también (descomenta)
+    .col-margin{display:none;}
+    */
+  }
+
   @media (max-width:390px){
     input{font-size:17px}
     .btnPrimary{font-size:19px}
@@ -271,21 +279,18 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <!-- LADO -->
     <div class="sectionLabel">Lado</div>
     <div class="segRow">
       <div id="btnShort" class="segBtn short on">Short</div>
       <div id="btnLong"  class="segBtn long">Long</div>
     </div>
 
-    <!-- ESTRATEGIA -->
     <div class="sectionLabel">Estrategia</div>
     <div class="segRow" style="margin-bottom:14px">
       <div id="btnEma" class="segBtn strategy on">EMA8</div>
       <div id="btnBol" class="segBtn strategy">Bollinger</div>
     </div>
 
-    <!-- ENTRADA -->
     <div class="grid3">
       <div>
         <div class="lab">Entrada</div>
@@ -312,7 +317,6 @@
       <div class="pill ok" id="pillMode">Modo: —</div>
     </div>
 
-    <!-- TABLA ENTRADAS -->
     <div class="tableWrap">
       <table>
         <thead>
@@ -320,8 +324,8 @@
             <th>#</th>
             <th class="r">Precio</th>
             <th class="r">Lev</th>
-            <th class="r">Margen</th>
-            <th class="r">Qty</th>
+            <th class="r col-margin">Margen</th>
+            <th class="r col-qty">Qty</th>
             <th class="r">Acciones</th>
           </tr>
         </thead>
@@ -329,7 +333,6 @@
       </table>
     </div>
 
-    <!-- TP/SL/TP2 -->
     <div class="tpRow">
       <div>
         <div class="lab">TP1 (precio, opc.)</div>
@@ -347,7 +350,6 @@
 
     <div class="hintUnder" id="ruleText">—</div>
 
-    <!-- KPIs (emparejados) -->
     <div class="kpiGrid">
       <div class="kpi">
         <div class="t">Promedio</div>
@@ -367,7 +369,6 @@
         <div class="v small" id="kRoe">—</div>
       </div>
 
-      <!-- TP1: PL ↔ TP1 usado -->
       <div class="kpi">
         <div class="t">P/L neto @ TP1</div>
         <div class="v" id="kPL1">—</div>
@@ -378,7 +379,6 @@
         <div class="copyTag"><span class="copyDot"></span>toque = copiar</div>
       </div>
 
-      <!-- TP2: (se oculta si no hay TP2) -->
       <div class="kpi" id="kPL2Card">
         <div class="t">P/L neto @ TP2</div>
         <div class="v" id="kPL2">—</div>
@@ -389,7 +389,6 @@
         <div class="copyTag"><span class="copyDot"></span>toque = copiar</div>
       </div>
 
-      <!-- SL: PL ↔ SL usado -->
       <div class="kpi">
         <div class="t">P/L neto @ SL</div>
         <div class="v" id="kPLsl">—</div>
@@ -411,67 +410,39 @@
 </div>
 
 <script>
-/* =========================
-   CONFIG (Bitunix fijo)
-========================= */
-const BITUNIX = {
-  feeRoundTrip: 0.0006,    // 0.06%
-  mmr: 0.01,               // 1%
-  liqCloseFee: 0.0003      // 0.03% (solo liq)
-};
-
+const BITUNIX = { feeRoundTrip:0.0006, mmr:0.01, liqCloseFee:0.0003 };
 const STRATS = {
-  ema: { name:"EMA8", tp1Pct:0.4, slPct:0.4, partialPct:60 },
-  bol: { name:"Bollinger", tp1Pct:0.6, slPct:0.5, partialPct:50 }
+  ema:{ name:"EMA8", tp1Pct:0.4, slPct:0.4, partialPct:60 },
+  bol:{ name:"Bollinger", tp1Pct:0.6, slPct:0.5, partialPct:50 }
 };
 
-/* =========================
-   Utils
-========================= */
 const $ = (s)=>document.querySelector(s);
 const toastEl = $("#toast");
-
-function fmt(x, d=6){
-  return Number.isFinite(x)
-    ? Number(x).toLocaleString(undefined,{maximumFractionDigits:d})
-    : "—";
-}
-
+function fmt(x, d=6){ return Number.isFinite(x) ? Number(x).toLocaleString(undefined,{maximumFractionDigits:d}) : "—"; }
 function toNum(v){
   if(v==null) return NaN;
   const s = String(v).trim().replace(/\s+/g,'').replace(/,/g,'.');
   const n = parseFloat(s);
   return Number.isFinite(n) ? n : NaN;
 }
-
 function setToast(msg){
   toastEl.textContent = msg || "";
   if(msg) setTimeout(()=>{ if(toastEl.textContent===msg) toastEl.textContent=""; }, 1200);
 }
-
 async function copyText(text){
   const t = String(text || "").trim();
   if(!t || t==="—") return;
-  try{
-    await navigator.clipboard.writeText(t);
-    setToast("✅ Copiado");
-  }catch(_){
-    // fallback
+  try{ await navigator.clipboard.writeText(t); setToast("✅ Copiado"); }
+  catch(_){
     const ta=document.createElement("textarea");
-    ta.value=t;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
+    ta.value=t; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy");
     document.body.removeChild(ta);
     setToast("✅ Copiado");
   }
 }
 
-/* qty lineal */
-function qtyFromLeg(price, lev, margin){
-  return (margin * lev) / price;
-}
-
+function qtyFromLeg(price, lev, margin){ return (margin * lev) / price; }
 function totals(legs){
   const qtys = legs.map(l => qtyFromLeg(l.price, l.lev, l.margin));
   const Q = qtys.reduce((a,b)=>a+b,0);
@@ -482,7 +453,6 @@ function totals(legs){
   const levEff = (M>0 && notional>0) ? (notional/M) : NaN;
   return {Q,W,M,avg,notional,levEff, qtys};
 }
-
 function liquidation(side, Q, avg, M){
   if(!(Q>0 && avg>0 && M>=0)) return NaN;
   const a = BITUNIX.mmr + BITUNIX.liqCloseFee;
@@ -494,109 +464,57 @@ function liquidation(side, Q, avg, M){
     return (M + Q*avg) / (Q * (1 + a));
   }
 }
-
 function pnlGross(side, Q, avg, p){
   if(!(Q>0 && avg>0 && p>0)) return NaN;
   return side === "long" ? (Q*(p-avg)) : (Q*(avg-p));
 }
-
-function feeOnClose(notionalClosed){
-  if(!(notionalClosed>0)) return 0;
-  return notionalClosed * BITUNIX.feeRoundTrip;
-}
-
-function roe(netPnl, marginTotal){
-  if(!(marginTotal>0) || !Number.isFinite(netPnl)) return NaN;
-  return (netPnl / marginTotal) * 100;
-}
-
+function feeOnClose(notionalClosed){ return (notionalClosed>0) ? notionalClosed * BITUNIX.feeRoundTrip : 0; }
+function roe(netPnl, marginTotal){ return (marginTotal>0 && Number.isFinite(netPnl)) ? (netPnl/marginTotal)*100 : NaN; }
 function priceFromPct(side, avg, pct, kind){
   const p = pct/100;
   if(!(avg>0 && p>=0)) return NaN;
-  if(side==="long"){
-    return kind==="tp" ? avg*(1+p) : avg*(1-p);
-  }else{
-    return kind==="tp" ? avg*(1-p) : avg*(1+p);
-  }
+  if(side==="long") return kind==="tp" ? avg*(1+p) : avg*(1-p);
+  return kind==="tp" ? avg*(1-p) : avg*(1+p);
+}
+function setInvalid(el,on){ el.classList.toggle("invalid",!!on); }
+function validateTargets(side, avg, tp1, tp2, sl){
+  setInvalid(tp1Input,false); setInvalid(tp2Input,false); setInvalid(slInput,false);
+  if(!(avg>0)) return;
+  const isLong = side==="long";
+  if(Number.isFinite(tp1)) setInvalid(tp1Input, isLong ? (tp1<=avg) : (tp1>=avg));
+  if(Number.isFinite(tp2)) setInvalid(tp2Input, isLong ? (tp2<=avg) : (tp2>=avg));
+  if(Number.isFinite(sl))  setInvalid(slInput,  isLong ? (sl>=avg)  : (sl<=avg));
 }
 
-/* =========================
-   Estado
-========================= */
-const st = {
-  side: "short",
-  strat: "ema",
-  legs: [],
-  editIndex: -1
-};
+const st = { side:"short", strat:"ema", legs:[], editIndex:-1 };
 
-/* =========================
-   UI refs
-========================= */
-const btnShort = $("#btnShort");
-const btnLong  = $("#btnLong");
-const btnEma   = $("#btnEma");
-const btnBol   = $("#btnBol");
+const btnShort=$("#btnShort"), btnLong=$("#btnLong"), btnEma=$("#btnEma"), btnBol=$("#btnBol");
+const inPrice=$("#inPrice"), inLev=$("#inLev"), inMargin=$("#inMargin");
+const btnAdd=$("#btnAdd"), btnReset=$("#btnReset");
+const rowsEl=$("#rows");
+const tp1Input=$("#tp1Price"), slInput=$("#slPrice"), tp2Input=$("#tp2Price");
+const pillMargin=$("#pillMargin"), pillQty=$("#pillQty"), pillMode=$("#pillMode");
+const ruleText=$("#ruleText");
 
-const inPrice  = $("#inPrice");
-const inLev    = $("#inLev");
-const inMargin = $("#inMargin");
+const kAvg=$("#kAvg"), kLiq=$("#kLiq"), kLevEf=$("#kLevEff"), kRoe=$("#kRoe");
+const kPL1=$("#kPL1"), kPL2=$("#kPL2"), kPLsl=$("#kPLsl");
+const kTP1u=$("#kTP1u"), kTP2u=$("#kTP2u"), kSLu=$("#kSLu");
+const kPL2Card=$("#kPL2Card"), kTP2Card=$("#kTP2Card"), kTP1Card=$("#kTP1Card"), kSLCard=$("#kSLCard");
 
-const btnAdd   = $("#btnAdd");
-const btnReset = $("#btnReset");
-
-const rowsEl   = $("#rows");
-
-const tp1Input = $("#tp1Price");
-const slInput  = $("#slPrice");
-const tp2Input = $("#tp2Price");
-
-const pillMargin = $("#pillMargin");
-const pillQty    = $("#pillQty");
-const pillMode   = $("#pillMode");
-
-const ruleText = $("#ruleText");
-
-const kAvg   = $("#kAvg");
-const kLiq   = $("#kLiq");
-const kLevEf = $("#kLevEff");
-const kRoe   = $("#kRoe");
-const kPL1   = $("#kPL1");
-const kPL2   = $("#kPL2");
-const kPLsl  = $("#kPLsl");
-const kTP1u  = $("#kTP1u");
-const kTP2u  = $("#kTP2u");
-const kSLu   = $("#kSLu");
-
-const kPL2Card = $("#kPL2Card");
-const kTP2Card = $("#kTP2Card");
-const kTP1Card = $("#kTP1Card");
-const kSLCard  = $("#kSLCard");
-
-/* =========================
-   Preview leg (no añadido)
-========================= */
 function previewLeg(){
-  const p = toNum(inPrice.value);
-  const L = toNum(inLev.value);
-  const m = toNum(inMargin.value);
-  if(p>0 && L>0 && m>0) return {price:p, lev:L, margin:m};
-  return null;
+  const p=toNum(inPrice.value), L=toNum(inLev.value), m=toNum(inMargin.value);
+  return (p>0 && L>0 && m>0) ? {price:p, lev:L, margin:m} : null;
 }
 
-/* =========================
-   Render table
-========================= */
 function renderTable(committed, preview){
-  rowsEl.innerHTML = "";
+  rowsEl.innerHTML="";
+  const all = committed.map((l,i)=>({type:"real",idx:i,leg:l}));
+  if(preview) all.push({type:"preview",idx:-1,leg:preview});
 
-  const allRows = committed.map((l,i)=>({type:"real", idx:i, leg:l}));
-  if(preview) allRows.push({type:"preview", idx:-1, leg:preview});
-
-  allRows.forEach((r)=>{
-    const l = r.leg;
-    const q = qtyFromLeg(l.price, l.lev, l.margin);
-    const tr = document.createElement("tr");
+  all.forEach(r=>{
+    const l=r.leg;
+    const q=qtyFromLeg(l.price,l.lev,l.margin);
+    const tr=document.createElement("tr");
     if(r.type==="preview") tr.classList.add("preview");
 
     const actions = r.type==="real"
@@ -606,12 +524,12 @@ function renderTable(committed, preview){
          </div>`
       : `<span class="muted">Previsualización</span>`;
 
-    tr.innerHTML = `
+    tr.innerHTML=`
       <td>${r.type==="real" ? (r.idx+1) : "—"}</td>
       <td class="r">${fmt(l.price,6)}</td>
       <td class="r">${fmt(l.lev,2)}×</td>
-      <td class="r">${fmt(l.margin,2)}</td>
-      <td class="r">${fmt(q,6)}</td>
+      <td class="r col-margin">${fmt(l.margin,2)}</td>
+      <td class="r col-qty">${fmt(q,6)}</td>
       <td class="r">${actions}</td>
     `;
     rowsEl.appendChild(tr);
@@ -619,62 +537,31 @@ function renderTable(committed, preview){
 }
 
 rowsEl.addEventListener("click",(e)=>{
-  const edit = e.target.getAttribute("data-edit");
-  const del  = e.target.getAttribute("data-del");
+  const edit=e.target.getAttribute("data-edit");
+  const del=e.target.getAttribute("data-del");
 
   if(edit!=null){
-    const i = parseInt(edit,10);
-    const l = st.legs[i];
-    st.editIndex = i;
-    inPrice.value  = String(l.price);
-    inLev.value    = String(l.lev);
-    inMargin.value = String(l.margin);
-    btnAdd.textContent = "Guardar";
+    const i=parseInt(edit,10);
+    const l=st.legs[i];
+    st.editIndex=i;
+    inPrice.value=String(l.price);
+    inLev.value=String(l.lev);
+    inMargin.value=String(l.margin);
+    btnAdd.textContent="Guardar";
     recalc();
   }
   if(del!=null){
-    const i = parseInt(del,10);
+    const i=parseInt(del,10);
     st.legs.splice(i,1);
-    if(st.editIndex===i){
-      st.editIndex=-1;
-      btnAdd.textContent="Añadir entrada";
-    }
+    if(st.editIndex===i){ st.editIndex=-1; btnAdd.textContent="Añadir entrada"; }
     recalc();
   }
 });
 
-/* =========================
-   Validation
-========================= */
-function setInvalid(el, on){
-  el.classList.toggle("invalid", !!on);
-}
-function validateTargets(side, avg, tp1, tp2, sl){
-  setInvalid(tp1Input,false);
-  setInvalid(tp2Input,false);
-  setInvalid(slInput,false);
-  if(!(avg>0)) return;
-
-  const isLong = side==="long";
-
-  if(Number.isFinite(tp1)){
-    setInvalid(tp1Input, isLong ? (tp1<=avg) : (tp1>=avg));
-  }
-  if(Number.isFinite(tp2)){
-    setInvalid(tp2Input, isLong ? (tp2<=avg) : (tp2>=avg));
-  }
-  if(Number.isFinite(sl)){
-    setInvalid(slInput, isLong ? (sl>=avg) : (sl<=avg));
-  }
-}
-
-/* =========================
-   Core recalc
-========================= */
 function recalc(){
-  const prev = previewLeg();
-  const usedLegs = prev ? st.legs.concat([prev]) : st.legs.slice();
-  const t = totals(usedLegs);
+  const prev=previewLeg();
+  const used=prev ? st.legs.concat([prev]) : st.legs.slice();
+  const t=totals(used);
 
   pillMargin.textContent = `Margin total: ${t.M>0 ? fmt(t.M,2) : "—"}`;
   pillQty.textContent    = `Qty total: ${t.Q>0 ? fmt(t.Q,6) : "—"}`;
@@ -684,65 +571,59 @@ function recalc(){
 
   renderTable(st.legs, prev);
 
-  const S = STRATS[st.strat];
+  const S=STRATS[st.strat];
   ruleText.textContent = `${S.name}: TP1 ${S.tp1Pct}% | SL ${S.slPct}% | Parcial ${S.partialPct}%`;
 
   if(!(t.Q>0 && t.avg>0 && t.M>0)){
-    kAvg.textContent="—"; kLiq.textContent="—"; kLevEf.textContent="—";
-    kRoe.textContent="—"; kPL1.textContent="—"; kPL2.textContent="—"; kPLsl.textContent="—";
+    kAvg.textContent="—"; kLiq.textContent="—"; kLevEf.textContent="—"; kRoe.textContent="—";
+    kPL1.textContent="—"; kPL2.textContent="—"; kPLsl.textContent="—";
     kTP1u.textContent="—"; kTP2u.textContent="—"; kSLu.textContent="—";
-    kPL2Card.style.display = "";
-    kTP2Card.style.display = "";
+    kPL2Card.style.display=""; kTP2Card.style.display="";
     validateTargets(st.side, NaN, NaN, NaN, NaN);
     return;
   }
 
-  const tp1Override = toNum(tp1Input.value);
-  const slOverride  = toNum(slInput.value);
-  const tp2Override = toNum(tp2Input.value);
+  const tp1Ov=toNum(tp1Input.value);
+  const slOv =toNum(slInput.value);
+  const tp2Ov=toNum(tp2Input.value);
 
-  const tp1Used = Number.isFinite(tp1Override) ? tp1Override : priceFromPct(st.side, t.avg, S.tp1Pct, "tp");
-  const slUsed  = Number.isFinite(slOverride)  ? slOverride  : priceFromPct(st.side, t.avg, S.slPct,  "sl");
-  const tp2Used = Number.isFinite(tp2Override) ? tp2Override : NaN;
+  const tp1Used = Number.isFinite(tp1Ov) ? tp1Ov : priceFromPct(st.side, t.avg, S.tp1Pct, "tp");
+  const slUsed  = Number.isFinite(slOv)  ? slOv  : priceFromPct(st.side, t.avg, S.slPct,  "sl");
+  const tp2Used = Number.isFinite(tp2Ov) ? tp2Ov : NaN;
 
   validateTargets(st.side, t.avg, tp1Used, tp2Used, slUsed);
 
-  const liq = liquidation(st.side, t.Q, t.avg, t.M);
-  const levEff = (t.M>0 && t.notional>0) ? (t.notional/t.M) : NaN;
+  const liq=liquidation(st.side, t.Q, t.avg, t.M);
+  const levEff= (t.M>0 && t.notional>0) ? (t.notional/t.M) : NaN;
 
-  const partialFrac = S.partialPct/100;
-
+  const partialFrac=S.partialPct/100;
   function netAtPrice(price, closeFrac){
     if(!(price>0) || !(closeFrac>0) || closeFrac>1) return NaN;
-    const grossAll = pnlGross(st.side, t.Q, t.avg, price);
+    const grossAll=pnlGross(st.side, t.Q, t.avg, price);
     if(!Number.isFinite(grossAll)) return NaN;
-    const grossClosed = grossAll * closeFrac;
-    const notionalClosed = (t.Q * price) * closeFrac;
-    const fee = feeOnClose(notionalClosed);
-    return grossClosed - fee;
+    const grossClosed=grossAll*closeFrac;
+    const notionalClosed=(t.Q*price)*closeFrac;
+    const fee=feeOnClose(notionalClosed);
+    return grossClosed-fee;
   }
 
   const netTP1 = Number.isFinite(tp1Used) ? netAtPrice(tp1Used, partialFrac) : NaN;
   const netTP2 = Number.isFinite(tp2Used) ? netAtPrice(tp2Used, 1.0) : NaN;
   const netSL  = Number.isFinite(slUsed)  ? netAtPrice(slUsed,  1.0) : NaN;
 
-  const roeTP1 = roe(netTP1, t.M);
-  const roeTP2 = roe(netTP2, t.M);
-  const roeSL  = roe(netSL,  t.M);
+  const roeTP1=roe(netTP1,t.M), roeTP2=roe(netTP2,t.M), roeSL=roe(netSL,t.M);
 
-  kAvg.textContent = fmt(t.avg,6);
-  kLiq.textContent = fmt(liq,6);
-  kLevEf.textContent = Number.isFinite(levEff) ? `${fmt(levEff,2)}×` : "—";
+  kAvg.textContent=fmt(t.avg,6);
+  kLiq.textContent=fmt(liq,6);
+  kLevEf.textContent=Number.isFinite(levEff)?`${fmt(levEff,2)}×`:"—";
+  kRoe.textContent=
+    `${Number.isFinite(roeTP1)?fmt(roeTP1,2)+"%":"—"} / `+
+    `${Number.isFinite(roeTP2)?fmt(roeTP2,2)+"%":"—"} / `+
+    `${Number.isFinite(roeSL)?fmt(roeSL,2)+"%":"—"}`;
 
-  const roeStr =
-    `${Number.isFinite(roeTP1) ? fmt(roeTP1,2)+"%" : "—"} / `+
-    `${Number.isFinite(roeTP2) ? fmt(roeTP2,2)+"%" : "—"} / `+
-    `${Number.isFinite(roeSL)  ? fmt(roeSL,2)+"%"  : "—"}`;
-  kRoe.textContent = roeStr;
-
-  function setPL(el, v){
+  function setPL(el,v){
     if(!Number.isFinite(v)){ el.textContent="—"; el.classList.remove("up","down"); return; }
-    el.textContent = `${fmt(v,2)} USDT`;
+    el.textContent=`${fmt(v,2)} USDT`;
     el.classList.toggle("up", v>=0);
     el.classList.toggle("down", v<0);
   }
@@ -750,32 +631,27 @@ function recalc(){
   setPL(kPL2, netTP2);
   setPL(kPLsl, netSL);
 
-  kTP1u.textContent = Number.isFinite(tp1Used) ? fmt(tp1Used,6) : "—";
-  kTP2u.textContent = Number.isFinite(tp2Used) ? fmt(tp2Used,6) : "—";
-  kSLu.textContent  = Number.isFinite(slUsed)  ? fmt(slUsed,6)  : "—";
+  kTP1u.textContent=Number.isFinite(tp1Used)?fmt(tp1Used,6):"—";
+  kTP2u.textContent=Number.isFinite(tp2Used)?fmt(tp2Used,6):"—";
+  kSLu.textContent =Number.isFinite(slUsed)?fmt(slUsed,6):"—";
 
-  // ocultar TP2 KPIs si no hay TP2
   const hasTP2 = Number.isFinite(tp2Used) && (String(tp2Input.value).trim() !== "");
   kPL2Card.style.display = hasTP2 ? "" : "none";
   kTP2Card.style.display = hasTP2 ? "" : "none";
 
-  // set data-copy
-  kTP1Card.dataset.copy = Number.isFinite(tp1Used) ? fmt(tp1Used,6).replace(/\u00a0/g,'') : "";
-  kSLCard.dataset.copy  = Number.isFinite(slUsed)  ? fmt(slUsed,6).replace(/\u00a0/g,'')  : "";
-  kTP2Card.dataset.copy = hasTP2 ? fmt(tp2Used,6).replace(/\u00a0/g,'') : "";
+  kTP1Card.dataset.copy = Number.isFinite(tp1Used)?fmt(tp1Used,6).replace(/\u00a0/g,''):"";
+  kSLCard.dataset.copy  = Number.isFinite(slUsed)?fmt(slUsed,6).replace(/\u00a0/g,''):"";
+  kTP2Card.dataset.copy = hasTP2?fmt(tp2Used,6).replace(/\u00a0/g,''):"";
 }
 
-/* =========================
-   Toggles
-========================= */
 function setSide(side){
-  st.side = side;
+  st.side=side;
   btnShort.classList.toggle("on", side==="short");
   btnLong.classList.toggle("on", side==="long");
   recalc();
 }
 function setStrat(s){
-  st.strat = s;
+  st.strat=s;
   btnEma.classList.toggle("on", s==="ema");
   btnBol.classList.toggle("on", s==="bol");
   recalc();
@@ -786,68 +662,36 @@ btnLong.addEventListener("click",()=>setSide("long"));
 btnEma.addEventListener("click",()=>setStrat("ema"));
 btnBol.addEventListener("click",()=>setStrat("bol"));
 
-/* =========================
-   Add / Reset
-========================= */
 btnAdd.addEventListener("click",()=>{
-  const p = toNum(inPrice.value);
-  const L = toNum(inLev.value);
-  const m = toNum(inMargin.value);
+  const p=toNum(inPrice.value), L=toNum(inLev.value), m=toNum(inMargin.value);
   if(!(p>0 && L>0 && m>0)) return alert("Completa Entrada, Lev y Margen (>0).");
-
-  const leg = {price:p, lev:L, margin:m};
+  const leg={price:p, lev:L, margin:m};
 
   if(st.editIndex>=0){
-    st.legs[st.editIndex] = leg;
-    st.editIndex = -1;
-    btnAdd.textContent = "Añadir entrada";
+    st.legs[st.editIndex]=leg;
+    st.editIndex=-1;
+    btnAdd.textContent="Añadir entrada";
   }else{
     st.legs.push(leg);
   }
-
-  // dejar listo para probar
-  inPrice.value = "";
+  inPrice.value="";
   recalc();
 });
 
 btnReset.addEventListener("click",()=>{
-  st.legs = [];
-  st.editIndex = -1;
-  btnAdd.textContent = "Añadir entrada";
-
-  // borrar inputs (como pediste)
-  inPrice.value = "";
-  inLev.value = "";
-  inMargin.value = "";
-  tp1Input.value = "";
-  slInput.value  = "";
-  tp2Input.value = "";
+  st.legs=[]; st.editIndex=-1; btnAdd.textContent="Añadir entrada";
+  inPrice.value=""; inLev.value=""; inMargin.value="";
+  tp1Input.value=""; slInput.value=""; tp2Input.value="";
   setToast("");
-
   recalc();
 });
 
-/* =========================
-   Live preview
-========================= */
-[inPrice, inLev, inMargin, tp1Input, slInput, tp2Input].forEach(el=>{
-  el.addEventListener("input", recalc);
-});
-[inPrice, inLev, inMargin].forEach(el=>{
-  el.addEventListener("keydown",(e)=>{ if(e.key==="Enter") btnAdd.click(); });
+[inPrice,inLev,inMargin,tp1Input,slInput,tp2Input].forEach(el=> el.addEventListener("input", recalc));
+
+[kTP1Card,kSLCard,kTP2Card].forEach(card=>{
+  card.addEventListener("click", ()=> copyText(card.dataset.copy || ""));
 });
 
-/* =========================
-   Copy on tap
-========================= */
-[kTP1Card, kSLCard, kTP2Card].forEach(card=>{
-  card.addEventListener("click", ()=>{
-    const v = card.dataset.copy || "";
-    copyText(v);
-  });
-});
-
-/* Init */
 setSide("short");
 setStrat("ema");
 recalc();
