@@ -3,24 +3,32 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Bitunix — iPhone</title>
+<title>Bitunix — Entradas → Promedio / Liq / TP1-TP2 (iPhone)</title>
 <style>
   :root{
-    --bg1:#071022;
-    --bg2:#0b1630;
-    --panel:rgba(255,255,255,.06);
-    --panel2:rgba(255,255,255,.045);
+    --bg1:#070d1b;
+    --bg2:#0a1226;
+
+    --panel:rgba(255,255,255,.07);
+    --panel2:rgba(255,255,255,.055);
+
     --border:rgba(255,255,255,.10);
     --text:#e7eefc;
     --muted:rgba(231,238,252,.65);
 
-    --longOn:rgba(22,163,74,.22);
-    --shortOn:rgba(220,38,38,.18);
+    --btnBd:rgba(255,255,255,.12);
+
+    /* Colores como tu app "Parciales" */
+    --shortDark:#1a0b0b;
+    --shortOn:#7f1d1d;
+
+    --longDark:#0b1a10;
+    --longOn:#166534;
 
     --ok:#22c55e;
     --bad:#ef4444;
 
-    --shadow: 0 10px 25px rgba(0,0,0,.35);
+    --shadow: 0 14px 30px rgba(0,0,0,.45);
     --radius:18px;
   }
 
@@ -30,22 +38,27 @@
     margin:0;
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     color:var(--text);
+
+    /* Fondo más limpio para que se vean los botones */
     background:
-      radial-gradient(1200px 600px at 20% 0%, rgba(56,189,248,.18), transparent 55%),
-      radial-gradient(900px 500px at 80% 20%, rgba(34,197,94,.14), transparent 60%),
-      radial-gradient(1000px 700px at 10% 90%, rgba(239,68,68,.10), transparent 60%),
+      radial-gradient(1200px 700px at 50% -10%, rgba(56,189,248,.10), transparent 60%),
       linear-gradient(160deg, var(--bg1), var(--bg2));
+
     padding: env(safe-area-inset-top) 14px env(safe-area-inset-bottom) 14px;
   }
 
   .wrap{max-width:740px;margin:10px auto 18px auto}
 
+  /* (Lo dejas vacío si ya quitaste el título visualmente) */
+  .title{display:none}
+
   .card{
-    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.045));
-    border:1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.06));
+    border:1px solid rgba(255,255,255,.12);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     padding:14px;
+    backdrop-filter: blur(8px);
   }
 
   .sectionLabel{
@@ -65,48 +78,62 @@
   .segBtn{
     border-radius:16px;
     padding:12px 12px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.18);
-    color:rgba(231,238,252,.92);
+    border:1px solid var(--btnBd);
+    color:rgba(231,238,252,.95);
     font-weight:900;
     font-size:18px;
     text-align:center;
     user-select:none;
-    transition:transform .06s ease, filter .15s ease, background .15s ease, border-color .15s ease;
+    transition:transform .06s ease, filter .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+    background: rgba(0,0,0,.22);
   }
   .segBtn:active{transform:scale(.99)}
-  .segBtn.short.on{background: var(--shortOn); border-color: rgba(220,38,38,.35)}
-  .segBtn.long.on{background: var(--longOn); border-color: rgba(22,163,74,.35)}
-  .segBtn.on{filter:brightness(1.05)}
 
-  .segBtn.strategy{font-size:16px;font-weight:950}
+  /* Short/Long (más contraste) */
+  .segBtn.short{background: var(--shortDark); border-color: rgba(239,68,68,.22)}
+  .segBtn.long {background: var(--longDark);  border-color: rgba(34,197,94,.22)}
+
+  .segBtn.short.on{
+    background: var(--shortOn);
+    border-color: rgba(239,68,68,.70);
+    box-shadow: 0 0 0 2px rgba(239,68,68,.18) inset, 0 6px 16px rgba(0,0,0,.25);
+    filter:brightness(1.06);
+  }
+  .segBtn.long.on{
+    background: var(--longOn);
+    border-color: rgba(34,197,94,.70);
+    box-shadow: 0 0 0 2px rgba(34,197,94,.18) inset, 0 6px 16px rgba(0,0,0,.25);
+    filter:brightness(1.06);
+  }
+
+  /* Estrategia: que se note más el seleccionado */
+  .segBtn.strategy{font-size:16px;font-weight:900;background: rgba(0,0,0,.25)}
   .segBtn.strategy.on{
-    background: rgba(56,189,248,.16);
-    border-color: rgba(56,189,248,.42);
+    background: rgba(56,189,248,.22);
+    border-color: rgba(56,189,248,.70);
+    box-shadow: 0 0 0 2px rgba(56,189,248,.14) inset;
   }
 
   .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 
-  .lab{
-    font-size:12px;
-    color:var(--muted);
-    margin:0 0 6px 2px;
-  }
+  .field{margin:0}
+  .lab{font-size:12px;color:var(--muted);margin:0 0 6px 2px}
+
   input{
     width:100%;
     border-radius:16px;
-    border:1px solid rgba(255,255,255,.08);
-    background: rgba(0,0,0,.22);
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.28);
     color:rgba(231,238,252,.95);
     padding:12px 12px;
     font-size:18px;
     outline:none;
   }
   input::placeholder{color:rgba(231,238,252,.35)}
-  input:focus{border-color: rgba(56,189,248,.45); box-shadow:0 0 0 3px rgba(56,189,248,.14)}
+  input:focus{border-color: rgba(56,189,248,.55); box-shadow:0 0 0 3px rgba(56,189,248,.16)}
   input.invalid{
-    border-color: rgba(239,68,68,.55) !important;
-    box-shadow: 0 0 0 3px rgba(239,68,68,.18) !important;
+    border-color: rgba(239,68,68,.70) !important;
+    box-shadow: 0 0 0 3px rgba(239,68,68,.20) !important;
   }
 
   .btnRow{
@@ -120,7 +147,7 @@
     border-radius:18px;
     padding:14px 14px;
     border:1px solid rgba(255,255,255,.12);
-    font-weight:950;
+    font-weight:900;
     font-size:20px;
     cursor:pointer;
   }
@@ -130,21 +157,16 @@
     border:none;
   }
   .btnGhost{
-    background: rgba(0,0,0,.15);
+    background: rgba(0,0,0,.18);
     color:rgba(231,238,252,.92);
   }
   .btnGhost:active, .btnPrimary:active{transform:scale(.99)}
 
-  .pillRow{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin:10px 0 12px 0;
-  }
+  .pillRow{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 12px 0}
   .pill{
-    background: rgba(0,0,0,.18);
-    border:1px solid rgba(255,255,255,.08);
-    color: rgba(231,238,252,.82);
+    background: rgba(0,0,0,.22);
+    border:1px solid rgba(255,255,255,.10);
+    color: rgba(231,238,252,.85);
     padding:8px 10px;
     border-radius:999px;
     font-weight:800;
@@ -153,23 +175,18 @@
   .pill.preview{border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10)}
   .pill.ok{border-color: rgba(34,197,94,.30); background: rgba(34,197,94,.10)}
 
-  /* TABLA */
   .tableWrap{
     margin-top:10px;
-    overflow-x:auto; /* desktop/tablet ok */
+    overflow:auto;
     border-radius:18px;
-    border:1px solid rgba(255,255,255,.07);
-    background: rgba(0,0,0,.14);
+    border:1px solid rgba(255,255,255,.08);
+    background: rgba(0,0,0,.18);
   }
-  table{
-    width:100%;
-    border-collapse:collapse;
-    min-width: 0; /* <<< IMPORTANTE: ya no empuja acciones fuera */
-  }
+  table{width:100%;border-collapse:collapse;min-width:560px}
   th,td{
-    padding:8px 10px;
+    padding:10px 10px;
     border-bottom:1px solid rgba(255,255,255,.07);
-    font-size:13px;
+    font-size:14px;
     color: rgba(231,238,252,.90);
     vertical-align:middle;
     white-space:nowrap;
@@ -179,35 +196,17 @@
   tr:last-child td{border-bottom:none}
   tr.preview td{opacity:.78; font-style:italic}
 
-  .actions{
-    display:flex; gap:8px; justify-content:flex-end; align-items:center;
-  }
+  .actions{display:flex; gap:8px; justify-content:flex-end; align-items:center}
   .miniBtn{
     border-radius:12px;
     border:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.18);
+    background: rgba(0,0,0,.20);
     color: rgba(231,238,252,.92);
-    padding:7px 10px;
+    padding:8px 10px;
     font-weight:950;
     cursor:pointer;
   }
 
-  /* TP row */
-  .tpRow{
-    display:grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap:10px;
-    margin-top:10px;
-  }
-
-  .hintUnder{
-    margin:10px 2px 0 2px;
-    color: rgba(231,238,252,.65);
-    font-size:14px;
-    font-weight:800;
-  }
-
-  /* KPIs emparejados */
   .kpiGrid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -215,41 +214,17 @@
     margin-top:12px;
   }
   .kpi{
-    background: rgba(0,0,0,.18);
-    border:1px solid rgba(255,255,255,.08);
+    background: rgba(0,0,0,.20);
+    border:1px solid rgba(255,255,255,.10);
     border-radius:18px;
     padding:12px 12px;
   }
   .kpi .t{font-size:13px;color:rgba(231,238,252,.62);font-weight:850}
   .kpi .v{margin-top:6px;font-size:24px;font-weight:950;letter-spacing:.2px}
-  .kpi .v.small{font-size:18px;font-weight:950}
+  .kpi .v.small{font-size:18px;font-weight:900}
   .up{color:var(--ok)}
   .down{color:var(--bad)}
   .muted{color:var(--muted)}
-
-  .copyable{cursor:pointer; user-select:none;}
-  .copyable:active{transform:scale(.995)}
-  .copyTag{
-    margin-top:8px;
-    display:inline-flex;
-    gap:6px;
-    align-items:center;
-    font-size:12px;
-    color:rgba(231,238,252,.60);
-    font-weight:850;
-  }
-  .copyDot{
-    width:6px;height:6px;border-radius:999px;background:rgba(56,189,248,.9);
-    box-shadow:0 0 0 3px rgba(56,189,248,.18);
-  }
-
-  .toast{
-    margin-top:10px;
-    min-height:18px;
-    font-size:13px;
-    font-weight:800;
-    color: rgba(167,243,208,.95);
-  }
 
   .note{
     margin-top:10px;
@@ -258,16 +233,17 @@
     line-height:1.35;
   }
 
-  /* ======= RESPONSIVE iPHONE: acciones siempre visibles ======= */
-  @media (max-width: 480px){
-    th,td{font-size:12px; padding:8px 8px;}
-    .miniBtn{padding:7px 9px; font-size:12px;}
-
-    /* ocultar Qty para que quepa Acciones */
-    .col-qty{display:none;}
-    /* si aún queda apretado, podés ocultar margen también (descomenta)
-    .col-margin{display:none;}
-    */
+  .tpRow{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+  .hintUnder{
+    margin:10px 2px 0 2px;
+    color: rgba(231,238,252,.72);
+    font-size:14px;
+    font-weight:800;
   }
 
   @media (max-width:390px){
@@ -278,29 +254,34 @@
 </head>
 <body>
 <div class="wrap">
+  <div class="title">Bitunix — Entradas → Promedio / Liq / TP1-TP2 (iPhone)</div>
+
   <div class="card">
+    <!-- LADO -->
     <div class="sectionLabel">Lado</div>
     <div class="segRow">
       <div id="btnShort" class="segBtn short on">Short</div>
       <div id="btnLong"  class="segBtn long">Long</div>
     </div>
 
+    <!-- ESTRATEGIA -->
     <div class="sectionLabel">Estrategia</div>
     <div class="segRow" style="margin-bottom:14px">
       <div id="btnEma" class="segBtn strategy on">EMA8</div>
       <div id="btnBol" class="segBtn strategy">Bollinger</div>
     </div>
 
+    <!-- ENTRADA -->
     <div class="grid3">
-      <div>
+      <div class="field">
         <div class="lab">Entrada</div>
         <input id="inPrice" inputmode="decimal" placeholder="Ej: 223.59" />
       </div>
-      <div>
+      <div class="field">
         <div class="lab">Lev (x)</div>
         <input id="inLev" inputmode="decimal" value="30" />
       </div>
-      <div>
+      <div class="field">
         <div class="lab">Margen</div>
         <input id="inMargin" inputmode="decimal" value="50" />
       </div>
@@ -314,9 +295,10 @@
     <div class="pillRow">
       <div class="pill" id="pillMargin">Margin total: —</div>
       <div class="pill" id="pillQty">Qty total: —</div>
-      <div class="pill ok" id="pillMode">Modo: —</div>
+      <div class="pill" id="pillMode">Modo: —</div>
     </div>
 
+    <!-- TABLA ENTRADAS -->
     <div class="tableWrap">
       <table>
         <thead>
@@ -324,8 +306,8 @@
             <th>#</th>
             <th class="r">Precio</th>
             <th class="r">Lev</th>
-            <th class="r col-margin">Margen</th>
-            <th class="r col-qty">Qty</th>
+            <th class="r">Margen</th>
+            <th class="r">Qty</th>
             <th class="r">Acciones</th>
           </tr>
         </thead>
@@ -333,16 +315,17 @@
       </table>
     </div>
 
+    <!-- TP/SL/TP2 -->
     <div class="tpRow">
-      <div>
+      <div class="field">
         <div class="lab">TP1 (precio, opc.)</div>
-        <input id="tp1Price" inputmode="decimal" placeholder="vacío = % estrategia" />
+        <input id="tp1Price" inputmode="decimal" placeholder="vacío = usa % estrategia" />
       </div>
-      <div>
+      <div class="field">
         <div class="lab">SL (precio, opc.)</div>
-        <input id="slPrice" inputmode="decimal" placeholder="vacío = % estrategia" />
+        <input id="slPrice" inputmode="decimal" placeholder="vacío = usa % estrategia" />
       </div>
-      <div>
+      <div class="field">
         <div class="lab">TP2 (precio, opc.)</div>
         <input id="tp2Price" inputmode="decimal" placeholder="cierre TOTAL 100%" />
       </div>
@@ -350,6 +333,7 @@
 
     <div class="hintUnder" id="ruleText">—</div>
 
+    <!-- KPIs -->
     <div class="kpiGrid">
       <div class="kpi">
         <div class="t">Promedio</div>
@@ -359,7 +343,6 @@
         <div class="t">Liq (aprox.)</div>
         <div class="v" id="kLiq">—</div>
       </div>
-
       <div class="kpi">
         <div class="t">Lev efectivo</div>
         <div class="v" id="kLevEff">—</div>
@@ -370,37 +353,31 @@
       </div>
 
       <div class="kpi">
-        <div class="t">P/L neto @ TP1</div>
+        <div class="t">P/L neto @ TP1 (parcial)</div>
         <div class="v" id="kPL1">—</div>
       </div>
-      <div class="kpi copyable" id="kTP1Card" data-copy="">
-        <div class="t">TP1 usado</div>
-        <div class="v" id="kTP1u">—</div>
-        <div class="copyTag"><span class="copyDot"></span>toque = copiar</div>
-      </div>
-
-      <div class="kpi" id="kPL2Card">
-        <div class="t">P/L neto @ TP2</div>
+      <div class="kpi">
+        <div class="t">P/L neto @ TP2 (final)</div>
         <div class="v" id="kPL2">—</div>
-      </div>
-      <div class="kpi copyable" id="kTP2Card" data-copy="">
-        <div class="t">TP2 usado</div>
-        <div class="v" id="kTP2u">—</div>
-        <div class="copyTag"><span class="copyDot"></span>toque = copiar</div>
       </div>
 
       <div class="kpi">
         <div class="t">P/L neto @ SL</div>
         <div class="v" id="kPLsl">—</div>
       </div>
-      <div class="kpi copyable" id="kSLCard" data-copy="">
+      <div class="kpi">
+        <div class="t">TP1 usado</div>
+        <div class="v" id="kTP1u">—</div>
+      </div>
+      <div class="kpi">
+        <div class="t">TP2 usado</div>
+        <div class="v" id="kTP2u">—</div>
+      </div>
+      <div class="kpi">
         <div class="t">SL usado</div>
         <div class="v" id="kSLu">—</div>
-        <div class="copyTag"><span class="copyDot"></span>toque = copiar</div>
       </div>
     </div>
-
-    <div class="toast" id="toast"></div>
 
     <div class="note">
       (Supuestos Bitunix fijos) P/L y ROE <b>netos</b> con fee ida+vuelta <b>0.06%</b> (peor caso) sobre el <b>NOTIONAL cerrado</b>.
@@ -410,39 +387,39 @@
 </div>
 
 <script>
-const BITUNIX = { feeRoundTrip:0.0006, mmr:0.01, liqCloseFee:0.0003 };
-const STRATS = {
-  ema:{ name:"EMA8", tp1Pct:0.4, slPct:0.4, partialPct:60 },
-  bol:{ name:"Bollinger", tp1Pct:0.6, slPct:0.5, partialPct:50 }
+/* =========================
+   CONFIG (Bitunix fijo)
+========================= */
+const BITUNIX = {
+  feeRoundTrip: 0.0006,    // 0.06% sobre notional cerrado (round-trip)
+  mmr: 0.01,               // 1%
+  liqCloseFee: 0.0003      // 0.03% (solo liq)
 };
 
+const STRATS = {
+  ema: { name:"EMA8", tp1Pct:0.4, slPct:0.4, partialPct:60 },
+  bol: { name:"Bollinger", tp1Pct:0.6, slPct:0.5, partialPct:50 }
+};
+
+/* =========================
+   Utils
+========================= */
 const $ = (s)=>document.querySelector(s);
-const toastEl = $("#toast");
-function fmt(x, d=6){ return Number.isFinite(x) ? Number(x).toLocaleString(undefined,{maximumFractionDigits:d}) : "—"; }
+const fmt = (x, d=6)=> Number.isFinite(x)
+  ? Number(x).toLocaleString(undefined,{maximumFractionDigits:d})
+  : "—";
+
 function toNum(v){
   if(v==null) return NaN;
   const s = String(v).trim().replace(/\s+/g,'').replace(/,/g,'.');
   const n = parseFloat(s);
   return Number.isFinite(n) ? n : NaN;
 }
-function setToast(msg){
-  toastEl.textContent = msg || "";
-  if(msg) setTimeout(()=>{ if(toastEl.textContent===msg) toastEl.textContent=""; }, 1200);
-}
-async function copyText(text){
-  const t = String(text || "").trim();
-  if(!t || t==="—") return;
-  try{ await navigator.clipboard.writeText(t); setToast("✅ Copiado"); }
-  catch(_){
-    const ta=document.createElement("textarea");
-    ta.value=t; document.body.appendChild(ta);
-    ta.select(); document.execCommand("copy");
-    document.body.removeChild(ta);
-    setToast("✅ Copiado");
-  }
+
+function qtyFromLeg(price, lev, margin){
+  return (margin * lev) / price;
 }
 
-function qtyFromLeg(price, lev, margin){ return (margin * lev) / price; }
 function totals(legs){
   const qtys = legs.map(l => qtyFromLeg(l.price, l.lev, l.margin));
   const Q = qtys.reduce((a,b)=>a+b,0);
@@ -453,6 +430,7 @@ function totals(legs){
   const levEff = (M>0 && notional>0) ? (notional/M) : NaN;
   return {Q,W,M,avg,notional,levEff, qtys};
 }
+
 function liquidation(side, Q, avg, M){
   if(!(Q>0 && avg>0 && M>=0)) return NaN;
   const a = BITUNIX.mmr + BITUNIX.liqCloseFee;
@@ -464,57 +442,92 @@ function liquidation(side, Q, avg, M){
     return (M + Q*avg) / (Q * (1 + a));
   }
 }
+
 function pnlGross(side, Q, avg, p){
   if(!(Q>0 && avg>0 && p>0)) return NaN;
   return side === "long" ? (Q*(p-avg)) : (Q*(avg-p));
 }
-function feeOnClose(notionalClosed){ return (notionalClosed>0) ? notionalClosed * BITUNIX.feeRoundTrip : 0; }
-function roe(netPnl, marginTotal){ return (marginTotal>0 && Number.isFinite(netPnl)) ? (netPnl/marginTotal)*100 : NaN; }
+
+function feeOnClose(notionalClosed){
+  if(!(notionalClosed>0)) return 0;
+  return notionalClosed * BITUNIX.feeRoundTrip;
+}
+
+function roe(netPnl, marginTotal){
+  if(!(marginTotal>0) || !Number.isFinite(netPnl)) return NaN;
+  return (netPnl / marginTotal) * 100;
+}
+
 function priceFromPct(side, avg, pct, kind){
   const p = pct/100;
   if(!(avg>0 && p>=0)) return NaN;
-  if(side==="long") return kind==="tp" ? avg*(1+p) : avg*(1-p);
-  return kind==="tp" ? avg*(1-p) : avg*(1+p);
-}
-function setInvalid(el,on){ el.classList.toggle("invalid",!!on); }
-function validateTargets(side, avg, tp1, tp2, sl){
-  setInvalid(tp1Input,false); setInvalid(tp2Input,false); setInvalid(slInput,false);
-  if(!(avg>0)) return;
-  const isLong = side==="long";
-  if(Number.isFinite(tp1)) setInvalid(tp1Input, isLong ? (tp1<=avg) : (tp1>=avg));
-  if(Number.isFinite(tp2)) setInvalid(tp2Input, isLong ? (tp2<=avg) : (tp2>=avg));
-  if(Number.isFinite(sl))  setInvalid(slInput,  isLong ? (sl>=avg)  : (sl<=avg));
+  if(side==="long"){
+    return kind==="tp" ? avg*(1+p) : avg*(1-p);
+  }else{
+    return kind==="tp" ? avg*(1-p) : avg*(1+p);
+  }
 }
 
-const st = { side:"short", strat:"ema", legs:[], editIndex:-1 };
+/* =========================
+   Estado
+========================= */
+const st = { side: "short", strat: "ema", legs: [], editIndex: -1 };
 
-const btnShort=$("#btnShort"), btnLong=$("#btnLong"), btnEma=$("#btnEma"), btnBol=$("#btnBol");
-const inPrice=$("#inPrice"), inLev=$("#inLev"), inMargin=$("#inMargin");
-const btnAdd=$("#btnAdd"), btnReset=$("#btnReset");
-const rowsEl=$("#rows");
-const tp1Input=$("#tp1Price"), slInput=$("#slPrice"), tp2Input=$("#tp2Price");
-const pillMargin=$("#pillMargin"), pillQty=$("#pillQty"), pillMode=$("#pillMode");
-const ruleText=$("#ruleText");
+/* =========================
+   UI refs
+========================= */
+const btnShort = $("#btnShort");
+const btnLong  = $("#btnLong");
+const btnEma   = $("#btnEma");
+const btnBol   = $("#btnBol");
 
-const kAvg=$("#kAvg"), kLiq=$("#kLiq"), kLevEf=$("#kLevEff"), kRoe=$("#kRoe");
-const kPL1=$("#kPL1"), kPL2=$("#kPL2"), kPLsl=$("#kPLsl");
-const kTP1u=$("#kTP1u"), kTP2u=$("#kTP2u"), kSLu=$("#kSLu");
-const kPL2Card=$("#kPL2Card"), kTP2Card=$("#kTP2Card"), kTP1Card=$("#kTP1Card"), kSLCard=$("#kSLCard");
+const inPrice  = $("#inPrice");
+const inLev    = $("#inLev");
+const inMargin = $("#inMargin");
+
+const btnAdd   = $("#btnAdd");
+const btnReset = $("#btnReset");
+
+const rowsEl   = $("#rows");
+
+const tp1Input = $("#tp1Price");
+const slInput  = $("#slPrice");
+const tp2Input = $("#tp2Price");
+
+const pillMargin = $("#pillMargin");
+const pillQty    = $("#pillQty");
+const pillMode   = $("#pillMode");
+
+const ruleText = $("#ruleText");
+
+const kAvg   = $("#kAvg");
+const kLiq   = $("#kLiq");
+const kLevEf = $("#kLevEff");
+const kRoe   = $("#kRoe");
+const kPL1   = $("#kPL1");
+const kPL2   = $("#kPL2");
+const kPLsl  = $("#kPLsl");
+const kTP1u  = $("#kTP1u");
+const kTP2u  = $("#kTP2u");
+const kSLu   = $("#kSLu");
 
 function previewLeg(){
-  const p=toNum(inPrice.value), L=toNum(inLev.value), m=toNum(inMargin.value);
-  return (p>0 && L>0 && m>0) ? {price:p, lev:L, margin:m} : null;
+  const p = toNum(inPrice.value);
+  const L = toNum(inLev.value);
+  const m = toNum(inMargin.value);
+  if(p>0 && L>0 && m>0) return {price:p, lev:L, margin:m};
+  return null;
 }
 
 function renderTable(committed, preview){
-  rowsEl.innerHTML="";
-  const all = committed.map((l,i)=>({type:"real",idx:i,leg:l}));
-  if(preview) all.push({type:"preview",idx:-1,leg:preview});
+  rowsEl.innerHTML = "";
+  const allRows = committed.map((l,i)=>({type:"real", idx:i, leg:l}));
+  if(preview) allRows.push({type:"preview", idx:-1, leg:preview});
 
-  all.forEach(r=>{
-    const l=r.leg;
-    const q=qtyFromLeg(l.price,l.lev,l.margin);
-    const tr=document.createElement("tr");
+  allRows.forEach((r)=>{
+    const l = r.leg;
+    const q = qtyFromLeg(l.price, l.lev, l.margin);
+    const tr = document.createElement("tr");
     if(r.type==="preview") tr.classList.add("preview");
 
     const actions = r.type==="real"
@@ -524,12 +537,12 @@ function renderTable(committed, preview){
          </div>`
       : `<span class="muted">Previsualización</span>`;
 
-    tr.innerHTML=`
+    tr.innerHTML = `
       <td>${r.type==="real" ? (r.idx+1) : "—"}</td>
       <td class="r">${fmt(l.price,6)}</td>
       <td class="r">${fmt(l.lev,2)}×</td>
-      <td class="r col-margin">${fmt(l.margin,2)}</td>
-      <td class="r col-qty">${fmt(q,6)}</td>
+      <td class="r">${fmt(l.margin,2)}</td>
+      <td class="r">${fmt(q,6)}</td>
       <td class="r">${actions}</td>
     `;
     rowsEl.appendChild(tr);
@@ -537,31 +550,57 @@ function renderTable(committed, preview){
 }
 
 rowsEl.addEventListener("click",(e)=>{
-  const edit=e.target.getAttribute("data-edit");
-  const del=e.target.getAttribute("data-del");
+  const edit = e.target.getAttribute("data-edit");
+  const del  = e.target.getAttribute("data-del");
 
   if(edit!=null){
-    const i=parseInt(edit,10);
-    const l=st.legs[i];
-    st.editIndex=i;
-    inPrice.value=String(l.price);
-    inLev.value=String(l.lev);
-    inMargin.value=String(l.margin);
-    btnAdd.textContent="Guardar";
+    const i = parseInt(edit,10);
+    const l = st.legs[i];
+    st.editIndex = i;
+    inPrice.value  = String(l.price);
+    inLev.value    = String(l.lev);
+    inMargin.value = String(l.margin);
+    btnAdd.textContent = "Guardar";
     recalc();
   }
   if(del!=null){
-    const i=parseInt(del,10);
+    const i = parseInt(del,10);
     st.legs.splice(i,1);
-    if(st.editIndex===i){ st.editIndex=-1; btnAdd.textContent="Añadir entrada"; }
+    if(st.editIndex===i){
+      st.editIndex=-1;
+      btnAdd.textContent="Añadir entrada";
+      inPrice.value="";
+    }
     recalc();
   }
 });
 
+function setInvalid(el, on){
+  el.classList.toggle("invalid", !!on);
+}
+
+function validateTargets(side, avg, tp1, tp2, sl){
+  setInvalid(tp1Input,false);
+  setInvalid(tp2Input,false);
+  setInvalid(slInput,false);
+  if(!(avg>0)) return;
+
+  const isLong = side==="long";
+  if(Number.isFinite(tp1)){
+    setInvalid(tp1Input, isLong ? (tp1<=avg) : (tp1>=avg));
+  }
+  if(Number.isFinite(tp2)){
+    setInvalid(tp2Input, isLong ? (tp2<=avg) : (tp2>=avg));
+  }
+  if(Number.isFinite(sl)){
+    setInvalid(slInput, isLong ? (sl>=avg) : (sl<=avg));
+  }
+}
+
 function recalc(){
-  const prev=previewLeg();
-  const used=prev ? st.legs.concat([prev]) : st.legs.slice();
-  const t=totals(used);
+  const prev = previewLeg();
+  const usedLegs = prev ? st.legs.concat([prev]) : st.legs.slice();
+  const t = totals(usedLegs);
 
   pillMargin.textContent = `Margin total: ${t.M>0 ? fmt(t.M,2) : "—"}`;
   pillQty.textContent    = `Qty total: ${t.Q>0 ? fmt(t.Q,6) : "—"}`;
@@ -571,59 +610,69 @@ function recalc(){
 
   renderTable(st.legs, prev);
 
-  const S=STRATS[st.strat];
-  ruleText.textContent = `${S.name}: TP1 ${S.tp1Pct}% | SL ${S.slPct}% | Parcial ${S.partialPct}%`;
-
   if(!(t.Q>0 && t.avg>0 && t.M>0)){
-    kAvg.textContent="—"; kLiq.textContent="—"; kLevEf.textContent="—"; kRoe.textContent="—";
-    kPL1.textContent="—"; kPL2.textContent="—"; kPLsl.textContent="—";
-    kTP1u.textContent="—"; kTP2u.textContent="—"; kSLu.textContent="—";
-    kPL2Card.style.display=""; kTP2Card.style.display="";
+    kAvg.textContent = "—";
+    kLiq.textContent = "—";
+    kLevEf.textContent = "—";
+    kRoe.textContent = "—";
+    kPL1.textContent = "—";
+    kPL2.textContent = "—";
+    kPLsl.textContent = "—";
+    kTP1u.textContent = "—";
+    kTP2u.textContent = "—";
+    kSLu.textContent  = "—";
+    const S0 = STRATS[st.strat];
+    ruleText.textContent = `${S0.name}: TP1 ${S0.tp1Pct}% | SL ${S0.slPct}% | Parcial ${S0.partialPct}%`;
     validateTargets(st.side, NaN, NaN, NaN, NaN);
     return;
   }
 
-  const tp1Ov=toNum(tp1Input.value);
-  const slOv =toNum(slInput.value);
-  const tp2Ov=toNum(tp2Input.value);
+  const S = STRATS[st.strat];
+  ruleText.textContent = `${S.name}: TP1 ${S.tp1Pct}% | SL ${S.slPct}% | Parcial ${S.partialPct}%`;
 
-  const tp1Used = Number.isFinite(tp1Ov) ? tp1Ov : priceFromPct(st.side, t.avg, S.tp1Pct, "tp");
-  const slUsed  = Number.isFinite(slOv)  ? slOv  : priceFromPct(st.side, t.avg, S.slPct,  "sl");
-  const tp2Used = Number.isFinite(tp2Ov) ? tp2Ov : NaN;
+  const tp1Override = toNum(tp1Input.value);
+  const slOverride  = toNum(slInput.value);
+  const tp2Override = toNum(tp2Input.value);
+
+  const tp1Used = Number.isFinite(tp1Override) ? tp1Override : priceFromPct(st.side, t.avg, S.tp1Pct, "tp");
+  const slUsed  = Number.isFinite(slOverride)  ? slOverride  : priceFromPct(st.side, t.avg, S.slPct,  "sl");
+  const tp2Used = Number.isFinite(tp2Override) ? tp2Override : NaN;
 
   validateTargets(st.side, t.avg, tp1Used, tp2Used, slUsed);
 
-  const liq=liquidation(st.side, t.Q, t.avg, t.M);
-  const levEff= (t.M>0 && t.notional>0) ? (t.notional/t.M) : NaN;
+  const liq = liquidation(st.side, t.Q, t.avg, t.M);
+  const levEff = (t.M>0 && t.notional>0) ? (t.notional / t.M) : NaN;
 
-  const partialFrac=S.partialPct/100;
+  const partialFrac = S.partialPct / 100;
+
   function netAtPrice(price, closeFrac){
-    if(!(price>0) || !(closeFrac>0) || closeFrac>1) return NaN;
-    const grossAll=pnlGross(st.side, t.Q, t.avg, price);
+    if(!(price>0) || !(closeFrac>0) || !(closeFrac<=1)) return NaN;
+    const grossAll = pnlGross(st.side, t.Q, t.avg, price);
     if(!Number.isFinite(grossAll)) return NaN;
-    const grossClosed=grossAll*closeFrac;
-    const notionalClosed=(t.Q*price)*closeFrac;
-    const fee=feeOnClose(notionalClosed);
-    return grossClosed-fee;
+    const grossClosed = grossAll * closeFrac;
+    const notionalClosed = (t.Q * price) * closeFrac;
+    const fee = feeOnClose(notionalClosed);
+    return grossClosed - fee;
   }
 
   const netTP1 = Number.isFinite(tp1Used) ? netAtPrice(tp1Used, partialFrac) : NaN;
   const netTP2 = Number.isFinite(tp2Used) ? netAtPrice(tp2Used, 1.0) : NaN;
   const netSL  = Number.isFinite(slUsed)  ? netAtPrice(slUsed,  1.0) : NaN;
 
-  const roeTP1=roe(netTP1,t.M), roeTP2=roe(netTP2,t.M), roeSL=roe(netSL,t.M);
+  const roeTP1 = roe(netTP1, t.M);
+  const roeTP2 = roe(netTP2, t.M);
+  const roeSL  = roe(netSL,  t.M);
 
-  kAvg.textContent=fmt(t.avg,6);
-  kLiq.textContent=fmt(liq,6);
-  kLevEf.textContent=Number.isFinite(levEff)?`${fmt(levEff,2)}×`:"—";
-  kRoe.textContent=
-    `${Number.isFinite(roeTP1)?fmt(roeTP1,2)+"%":"—"} / `+
-    `${Number.isFinite(roeTP2)?fmt(roeTP2,2)+"%":"—"} / `+
-    `${Number.isFinite(roeSL)?fmt(roeSL,2)+"%":"—"}`;
+  kAvg.textContent   = fmt(t.avg,6);
+  kLiq.textContent   = fmt(liq,6);
+  kLevEf.textContent = Number.isFinite(levEff) ? `${fmt(levEff,2)}×` : "—";
 
-  function setPL(el,v){
+  kRoe.textContent =
+    `${Number.isFinite(roeTP1) ? fmt(roeTP1,2)+"%" : "—"} / ${Number.isFinite(roeTP2) ? fmt(roeTP2,2)+"%" : "—"} / ${Number.isFinite(roeSL) ? fmt(roeSL,2)+"%" : "—"}`;
+
+  function setPL(el, v){
     if(!Number.isFinite(v)){ el.textContent="—"; el.classList.remove("up","down"); return; }
-    el.textContent=`${fmt(v,2)} USDT`;
+    el.textContent = `${fmt(v,2)} USDT`;
     el.classList.toggle("up", v>=0);
     el.classList.toggle("down", v<0);
   }
@@ -631,27 +680,19 @@ function recalc(){
   setPL(kPL2, netTP2);
   setPL(kPLsl, netSL);
 
-  kTP1u.textContent=Number.isFinite(tp1Used)?fmt(tp1Used,6):"—";
-  kTP2u.textContent=Number.isFinite(tp2Used)?fmt(tp2Used,6):"—";
-  kSLu.textContent =Number.isFinite(slUsed)?fmt(slUsed,6):"—";
-
-  const hasTP2 = Number.isFinite(tp2Used) && (String(tp2Input.value).trim() !== "");
-  kPL2Card.style.display = hasTP2 ? "" : "none";
-  kTP2Card.style.display = hasTP2 ? "" : "none";
-
-  kTP1Card.dataset.copy = Number.isFinite(tp1Used)?fmt(tp1Used,6).replace(/\u00a0/g,''):"";
-  kSLCard.dataset.copy  = Number.isFinite(slUsed)?fmt(slUsed,6).replace(/\u00a0/g,''):"";
-  kTP2Card.dataset.copy = hasTP2?fmt(tp2Used,6).replace(/\u00a0/g,''):"";
+  kTP1u.textContent = Number.isFinite(tp1Used) ? fmt(tp1Used,6) : "—";
+  kTP2u.textContent = Number.isFinite(tp2Used) ? fmt(tp2Used,6) : "—";
+  kSLu.textContent  = Number.isFinite(slUsed)  ? fmt(slUsed,6)  : "—";
 }
 
 function setSide(side){
-  st.side=side;
+  st.side = side;
   btnShort.classList.toggle("on", side==="short");
   btnLong.classList.toggle("on", side==="long");
   recalc();
 }
 function setStrat(s){
-  st.strat=s;
+  st.strat = s;
   btnEma.classList.toggle("on", s==="ema");
   btnBol.classList.toggle("on", s==="bol");
   recalc();
@@ -663,33 +704,43 @@ btnEma.addEventListener("click",()=>setStrat("ema"));
 btnBol.addEventListener("click",()=>setStrat("bol"));
 
 btnAdd.addEventListener("click",()=>{
-  const p=toNum(inPrice.value), L=toNum(inLev.value), m=toNum(inMargin.value);
+  const p = toNum(inPrice.value);
+  const L = toNum(inLev.value);
+  const m = toNum(inMargin.value);
   if(!(p>0 && L>0 && m>0)) return alert("Completa Entrada, Lev y Margen (>0).");
-  const leg={price:p, lev:L, margin:m};
+
+  const leg = {price:p, lev:L, margin:m};
 
   if(st.editIndex>=0){
-    st.legs[st.editIndex]=leg;
-    st.editIndex=-1;
-    btnAdd.textContent="Añadir entrada";
+    st.legs[st.editIndex] = leg;
+    st.editIndex = -1;
+    btnAdd.textContent = "Añadir entrada";
   }else{
     st.legs.push(leg);
   }
-  inPrice.value="";
+
+  inPrice.value = "";
   recalc();
 });
 
 btnReset.addEventListener("click",()=>{
-  st.legs=[]; st.editIndex=-1; btnAdd.textContent="Añadir entrada";
-  inPrice.value=""; inLev.value=""; inMargin.value="";
-  tp1Input.value=""; slInput.value=""; tp2Input.value="";
-  setToast("");
+  st.legs = [];
+  st.editIndex = -1;
+  btnAdd.textContent = "Añadir entrada";
+  inPrice.value = "";
+  tp1Input.value = "";
+  slInput.value  = "";
+  tp2Input.value = "";
   recalc();
 });
 
-[inPrice,inLev,inMargin,tp1Input,slInput,tp2Input].forEach(el=> el.addEventListener("input", recalc));
-
-[kTP1Card,kSLCard,kTP2Card].forEach(card=>{
-  card.addEventListener("click", ()=> copyText(card.dataset.copy || ""));
+[inPrice, inLev, inMargin, tp1Input, slInput, tp2Input].forEach(el=>{
+  el.addEventListener("input", recalc);
+});
+[inPrice, inLev, inMargin].forEach(el=>{
+  el.addEventListener("keydown",(e)=>{
+    if(e.key==="Enter") btnAdd.click();
+  });
 });
 
 setSide("short");
