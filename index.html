@@ -8,14 +8,10 @@
   :root{
     --bg1:#071022;
     --bg2:#0b1630;
-    --panel:rgba(255,255,255,.06);
-    --panel2:rgba(255,255,255,.045);
     --border:rgba(255,255,255,.10);
-    --border2:rgba(255,255,255,.14);
     --text:#e7eefc;
     --muted:rgba(231,238,252,.65);
 
-    --btn:#0b1220;
     --btnBd:rgba(255,255,255,.10);
 
     --long:#16a34a;
@@ -26,18 +22,17 @@
 
     --ok:#22c55e;
     --bad:#ef4444;
-    --warn: #f59e0b;
+    --warn:#f59e0b;
 
     --shadow: 0 10px 25px rgba(0,0,0,.35);
     --radius:18px;
-    --radius2:14px;
   }
 
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0;
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     color:var(--text);
     background:
       radial-gradient(1200px 600px at 20% 0%, rgba(56,189,248,.18), transparent 55%),
@@ -48,13 +43,6 @@
   }
 
   .wrap{max-width:740px;margin:10px auto 18px auto}
-  .title{
-    font-size:22px;
-    font-weight:800;
-    letter-spacing:.2px;
-    margin:8px 2px 12px 2px;
-    color:rgba(231,238,252,.95);
-  }
 
   .card{
     background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.045));
@@ -95,17 +83,17 @@
   .segBtn.long{background: rgba(22,163,74,.10)}
   .segBtn.short.on{background: var(--shortOn); border-color: rgba(220,38,38,.35)}
   .segBtn.long.on{background: var(--longOn); border-color: rgba(22,163,74,.35)}
-  .segBtn.on{filter:brightness(1.05)}
+  .segBtn.on{filter:brightness(1.06)}
 
   .segBtn.strategy{font-size:16px;font-weight:850}
   .segBtn.strategy.on{
     background: rgba(56,189,248,.16);
-    border-color: rgba(56,189,248,.40);
+    border-color: rgba(56,189,248,.42);
+    box-shadow: 0 0 0 2px rgba(56,189,248,.10) inset;
   }
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-  .grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
 
   .field{margin:0}
   .lab{
@@ -174,27 +162,34 @@
   .pill.preview{border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10)}
   .pill.ok{border-color: rgba(34,197,94,.30); background: rgba(34,197,94,.10)}
 
+  /* TABLA: ahora con scroll horizontal para que SIEMPRE se vean Editar/Borrar */
   .tableWrap{
     margin-top:10px;
-    overflow:hidden;
+    overflow-x:auto;
+    -webkit-overflow-scrolling: touch;
     border-radius:18px;
     border:1px solid rgba(255,255,255,.07);
     background: rgba(0,0,0,.14);
   }
-  table{width:100%;border-collapse:collapse}
+  table{width:100%; min-width:560px; border-collapse:collapse}
   th,td{
     padding:10px 10px;
     border-bottom:1px solid rgba(255,255,255,.07);
     font-size:14px;
     color: rgba(231,238,252,.90);
     vertical-align:middle;
+    white-space:nowrap;
   }
   th{color:rgba(231,238,252,.55); font-weight:800}
   td.r, th.r{text-align:right}
   tr:last-child td{border-bottom:none}
   tr.preview td{opacity:.78; font-style:italic}
+
   .actions{
-    display:flex; gap:8px; justify-content:flex-end; align-items:center;
+    display:flex;
+    flex-direction:column;  /* en iPhone se ve mejor */
+    gap:6px;
+    align-items:flex-end;
   }
   .miniBtn{
     border-radius:12px;
@@ -224,6 +219,7 @@
   .up{color:var(--ok)}
   .down{color:var(--bad)}
   .muted{color:var(--muted)}
+
   .note{
     margin-top:10px;
     font-size:13px;
@@ -231,7 +227,7 @@
     line-height:1.35;
   }
 
-  /* Compact layout helpers */
+  /* TP row compact */
   .tpRow{
     display:grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -245,8 +241,10 @@
     font-weight:700;
   }
 
+  /* Ocultar bloques */
+  .hidden{display:none !important}
+
   @media (max-width:390px){
-    .title{font-size:20px}
     input{font-size:17px}
     .btnPrimary{font-size:19px}
   }
@@ -254,8 +252,6 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="title">Bitunix — Entradas → Promedio / Liq / TP1-TP2 (iPhone)</div>
-
   <div class="card">
     <!-- LADO -->
     <div class="sectionLabel">Lado</div>
@@ -343,21 +339,25 @@
         <div class="t">Liq (aprox.)</div>
         <div class="v" id="kLiq">—</div>
       </div>
+
       <div class="kpi">
         <div class="t">Lev efectivo</div>
         <div class="v" id="kLevEff">—</div>
       </div>
+
       <div class="kpi">
-        <div class="t">ROE neto (TP1 / TP2 / SL)</div>
+        <div class="t" id="kRoeLabel">ROE neto (TP1 / TP2 / SL)</div>
         <div class="v small" id="kRoe">—</div>
       </div>
 
       <div class="kpi">
-        <div class="t">P/L neto @ TP1 (parcial)</div>
+        <div class="t">P/L neto @ TP1</div>
         <div class="v" id="kPL1">—</div>
       </div>
-      <div class="kpi">
-        <div class="t">P/L neto @ TP2 (final)</div>
+
+      <!-- TP2 (se oculta si no hay TP2) -->
+      <div class="kpi" id="kpiPL2">
+        <div class="t">P/L neto @ TP2</div>
         <div class="v" id="kPL2">—</div>
       </div>
 
@@ -365,14 +365,18 @@
         <div class="t">P/L neto @ SL</div>
         <div class="v" id="kPLsl">—</div>
       </div>
+
       <div class="kpi">
         <div class="t">TP1 usado</div>
         <div class="v" id="kTP1u">—</div>
       </div>
-      <div class="kpi">
+
+      <!-- TP2 usado (se oculta si no hay TP2) -->
+      <div class="kpi" id="kpiTP2u">
         <div class="t">TP2 usado</div>
         <div class="v" id="kTP2u">—</div>
       </div>
+
       <div class="kpi">
         <div class="t">SL usado</div>
         <div class="v" id="kSLu">—</div>
@@ -416,12 +420,10 @@ function toNum(v){
   return Number.isFinite(n) ? n : NaN;
 }
 
-/* qty para futuros lineales USDT-margined */
 function qtyFromLeg(price, lev, margin){
   return (margin * lev) / price;
 }
 
-/* Totales (legs: [{price,lev,margin}]) */
 function totals(legs){
   const qtys = legs.map(l => qtyFromLeg(l.price, l.lev, l.margin));
   const Q = qtys.reduce((a,b)=>a+b,0);
@@ -433,44 +435,36 @@ function totals(legs){
   return {Q,W,M,avg,notional,levEff, qtys};
 }
 
-/* Liquidación aproximada (misma forma que venías usando; ahora con MMR + fee cierre) */
 function liquidation(side, Q, avg, M){
   if(!(Q>0 && avg>0 && M>=0)) return NaN;
-  const a = BITUNIX.mmr + BITUNIX.liqCloseFee; // MMR efectiva (liq)
+  const a = BITUNIX.mmr + BITUNIX.liqCloseFee;
   if(side === "long"){
     const den = Q * (1 - a);
     if(!(den>0)) return NaN;
     return (Q*avg - M) / den;
   }else{
-    // SHORT
     return (M + Q*avg) / (Q * (1 + a));
   }
 }
 
-/* PnL bruto a precio p para TODA la posición */
 function pnlGross(side, Q, avg, p){
   if(!(Q>0 && avg>0 && p>0)) return NaN;
   return side === "long" ? (Q*(p-avg)) : (Q*(avg-p));
 }
 
-/* Fee round-trip sobre NOTIONAL cerrado (peor caso) */
 function feeOnClose(notionalClosed){
   if(!(notionalClosed>0)) return 0;
   return notionalClosed * BITUNIX.feeRoundTrip;
 }
 
-/* ROE neto sobre margen total */
 function roe(netPnl, marginTotal){
   if(!(marginTotal>0) || !Number.isFinite(netPnl)) return NaN;
   return (netPnl / marginTotal) * 100;
 }
 
-/* Precio por % estrategia (desde avg) */
 function priceFromPct(side, avg, pct, kind){
-  // kind: "tp" or "sl" (solo para dirección)
   const p = pct/100;
   if(!(avg>0 && p>=0)) return NaN;
-
   if(side==="long"){
     return kind==="tp" ? avg*(1+p) : avg*(1-p);
   }else{
@@ -519,12 +513,16 @@ const kAvg   = $("#kAvg");
 const kLiq   = $("#kLiq");
 const kLevEf = $("#kLevEff");
 const kRoe   = $("#kRoe");
+const kRoeLabel = $("#kRoeLabel");
 const kPL1   = $("#kPL1");
 const kPL2   = $("#kPL2");
 const kPLsl  = $("#kPLsl");
 const kTP1u  = $("#kTP1u");
 const kTP2u  = $("#kTP2u");
 const kSLu   = $("#kSLu");
+
+const kpiPL2  = $("#kpiPL2");
+const kpiTP2u = $("#kpiTP2u");
 
 /* =========================
    Preview leg (no añadido)
@@ -546,7 +544,7 @@ function renderTable(committed, preview){
   const allRows = committed.map((l,i)=>({type:"real", idx:i, leg:l}));
   if(preview) allRows.push({type:"preview", idx:-1, leg:preview});
 
-  allRows.forEach((r, displayIndex)=>{
+  allRows.forEach((r)=>{
     const l = r.leg;
     const q = qtyFromLeg(l.price, l.lev, l.margin);
     const tr = document.createElement("tr");
@@ -605,28 +603,22 @@ function setInvalid(el, on){
 }
 
 function validateTargets(side, avg, tp1, tp2, sl){
-  // reset
   setInvalid(tp1Input,false);
   setInvalid(tp2Input,false);
   setInvalid(slInput,false);
 
   if(!(avg>0)) return;
 
-  // LONG: TP debe ser > avg; SL < avg
-  // SHORT: TP < avg; SL > avg
   const isLong = side==="long";
 
   if(Number.isFinite(tp1)){
-    const bad = isLong ? (tp1<=avg) : (tp1>=avg);
-    setInvalid(tp1Input, bad);
+    setInvalid(tp1Input, isLong ? (tp1<=avg) : (tp1>=avg));
   }
   if(Number.isFinite(tp2)){
-    const bad = isLong ? (tp2<=avg) : (tp2>=avg);
-    setInvalid(tp2Input, bad);
+    setInvalid(tp2Input, isLong ? (tp2<=avg) : (tp2>=avg));
   }
   if(Number.isFinite(sl)){
-    const bad = isLong ? (sl>=avg) : (sl<=avg);
-    setInvalid(slInput, bad);
+    setInvalid(slInput, isLong ? (sl>=avg) : (sl<=avg));
   }
 }
 
@@ -635,22 +627,20 @@ function validateTargets(side, avg, tp1, tp2, sl){
 ========================= */
 function recalc(){
   const prev = previewLeg();
-
-  // legs usados para cálculo = st.legs + preview (si existe)
   const usedLegs = prev ? st.legs.concat([prev]) : st.legs.slice();
   const t = totals(usedLegs);
 
-  // Píldoras
   pillMargin.textContent = `Margin total: ${t.M>0 ? fmt(t.M,2) : "—"}`;
   pillQty.textContent    = `Qty total: ${t.Q>0 ? fmt(t.Q,6) : "—"}`;
   pillMode.textContent   = prev ? "Modo: PREVIEW (no añadido)" : "Modo: FIJO";
   pillMode.classList.toggle("preview", !!prev);
   pillMode.classList.toggle("ok", !prev);
 
-  // Tabla
   renderTable(st.legs, prev);
 
-  // Si no hay nada todavía (ni preview), limpia KPIs
+  const S = STRATS[st.strat];
+  ruleText.textContent = `${S.name}: TP1 ${S.tp1Pct}% | SL ${S.slPct}% | Parcial ${S.partialPct}%`;
+
   if(!(t.Q>0 && t.avg>0 && t.M>0)){
     kAvg.textContent = "—";
     kLiq.textContent = "—";
@@ -662,16 +652,13 @@ function recalc(){
     kTP1u.textContent = "—";
     kTP2u.textContent = "—";
     kSLu.textContent  = "—";
-    ruleText.textContent = `${STRATS[st.strat].name}: TP1 ${STRATS[st.strat].tp1Pct}% | SL ${STRATS[st.strat].slPct}% | Parcial ${STRATS[st.strat].partialPct}%`;
+    kpiPL2.classList.add("hidden");
+    kpiTP2u.classList.add("hidden");
+    kRoeLabel.textContent = "ROE neto (TP1 / SL)";
     validateTargets(st.side, NaN, NaN, NaN, NaN);
     return;
   }
 
-  // Strategy text
-  const S = STRATS[st.strat];
-  ruleText.textContent = `${S.name}: TP1 ${S.tp1Pct}% | SL ${S.slPct}% | Parcial ${S.partialPct}%`;
-
-  // Targets used
   const tp1Override = toNum(tp1Input.value);
   const slOverride  = toNum(slInput.value);
   const tp2Override = toNum(tp2Input.value);
@@ -680,73 +667,71 @@ function recalc(){
   const slUsed  = Number.isFinite(slOverride)  ? slOverride  : priceFromPct(st.side, t.avg, S.slPct,  "sl");
   const tp2Used = Number.isFinite(tp2Override) ? tp2Override : NaN; // opcional
 
-  // Validate fields (marcar rojo si inválido)
+  const hasTP2 = Number.isFinite(tp2Used);
+
   validateTargets(st.side, t.avg, tp1Used, tp2Used, slUsed);
 
-  // Liquidación
   const liq = liquidation(st.side, t.Q, t.avg, t.M);
-
-  // Lev efectivo
   const levEff = (t.M>0 && t.notional>0) ? (t.notional / t.M) : NaN;
 
-  // PnL netos:
-  // - TP1 (parcial): cierra S.partialPct% del tamaño a tp1Used
-  // - TP2 (final): cierra 100% a tp2Used
-  // - SL: cierra 100% a slUsed
   const partialFrac = S.partialPct / 100;
 
   function netAtPrice(price, closeFrac){
     if(!(price>0) || !(closeFrac>0) || !(closeFrac<=1)) return NaN;
-
-    // grosso (sobre toda la posición)
     const grossAll = pnlGross(st.side, t.Q, t.avg, price);
     if(!Number.isFinite(grossAll)) return NaN;
-
-    // parte cerrada
     const grossClosed = grossAll * closeFrac;
-
-    // notional cerrado (aprox) = Q * price * closeFrac
     const notionalClosed = (t.Q * price) * closeFrac;
-
-    // fee peor caso (ida+vuelta sobre notional cerrado)
     const fee = feeOnClose(notionalClosed);
-
     return grossClosed - fee;
   }
 
   const netTP1 = Number.isFinite(tp1Used) ? netAtPrice(tp1Used, partialFrac) : NaN;
-  const netTP2 = Number.isFinite(tp2Used) ? netAtPrice(tp2Used, 1.0) : NaN;
+  const netTP2 = hasTP2 ? netAtPrice(tp2Used, 1.0) : NaN;
   const netSL  = Number.isFinite(slUsed)  ? netAtPrice(slUsed,  1.0) : NaN;
 
   const roeTP1 = roe(netTP1, t.M);
-  const roeTP2 = roe(netTP2, t.M);
+  const roeTP2 = hasTP2 ? roe(netTP2, t.M) : NaN;
   const roeSL  = roe(netSL,  t.M);
 
-  // KPIs
   kAvg.textContent   = fmt(t.avg,6);
   kLiq.textContent   = fmt(liq,6);
   kLevEf.textContent = Number.isFinite(levEff) ? `${fmt(levEff,2)}×` : "—";
 
-  // ROE triple
-  const roeStr = `${Number.isFinite(roeTP1) ? fmt(roeTP1,2)+"%" : "—"} / ${Number.isFinite(roeTP2) ? fmt(roeTP2,2)+"%" : "—"} / ${Number.isFinite(roeSL) ? fmt(roeSL,2)+"%" : "—"}`;
-  kRoe.textContent = roeStr;
+  // ROE label + texto (si no hay TP2, mostramos solo TP1/SL)
+  if(hasTP2){
+    kRoeLabel.textContent = "ROE neto (TP1 / TP2 / SL)";
+    kRoe.textContent = `${Number.isFinite(roeTP1) ? fmt(roeTP1,2)+"%" : "—"} / ${Number.isFinite(roeTP2) ? fmt(roeTP2,2)+"%" : "—"} / ${Number.isFinite(roeSL) ? fmt(roeSL,2)+"%" : "—"}`;
+  }else{
+    kRoeLabel.textContent = "ROE neto (TP1 / SL)";
+    kRoe.textContent = `${Number.isFinite(roeTP1) ? fmt(roeTP1,2)+"%" : "—"} / ${Number.isFinite(roeSL) ? fmt(roeSL,2)+"%" : "—"}`;
+  }
 
-  // P/L values
   function setPL(el, v){
     if(!Number.isFinite(v)){ el.textContent="—"; el.classList.remove("up","down"); return; }
     el.textContent = `${fmt(v,2)} USDT`;
     el.classList.toggle("up", v>=0);
     el.classList.toggle("down", v<0);
   }
+
   setPL(kPL1, netTP1);
-  setPL(kPL2, netTP2);
   setPL(kPLsl, netSL);
 
-  kTP1u.textContent = Number.isFinite(tp1Used) ? fmt(tp1Used,6) : "—";
-  kTP2u.textContent = Number.isFinite(tp2Used) ? fmt(tp2Used,6) : "—";
-  kSLu.textContent  = Number.isFinite(slUsed)  ? fmt(slUsed,6)  : "—";
+  // TP2 blocks visibility
+  if(hasTP2){
+    kpiPL2.classList.remove("hidden");
+    kpiTP2u.classList.remove("hidden");
+    setPL(kPL2, netTP2);
+    kTP2u.textContent = fmt(tp2Used,6);
+  }else{
+    kpiPL2.classList.add("hidden");
+    kpiTP2u.classList.add("hidden");
+    kPL2.textContent = "—";
+    kTP2u.textContent = "—";
+  }
 
-  // También: si el usuario escribe TP/SL “al revés”, deja claro con rojo (ya hecho).
+  kTP1u.textContent = Number.isFinite(tp1Used) ? fmt(tp1Used,6) : "—";
+  kSLu.textContent  = Number.isFinite(slUsed)  ? fmt(slUsed,6)  : "—";
 }
 
 /* =========================
@@ -764,7 +749,6 @@ function setStrat(s){
   btnBol.classList.toggle("on", s==="bol");
   recalc();
 }
-
 btnShort.addEventListener("click",()=>setSide("short"));
 btnLong.addEventListener("click",()=>setSide("long"));
 btnEma.addEventListener("click",()=>setStrat("ema"));
@@ -789,7 +773,7 @@ btnAdd.addEventListener("click",()=>{
     st.legs.push(leg);
   }
 
-  // dejar listo para probar de nuevo sin borrar cada vez
+  // listo para probar sin borrar: solo limpio entrada
   inPrice.value = "";
   recalc();
 });
@@ -798,10 +782,15 @@ btnReset.addEventListener("click",()=>{
   st.legs = [];
   st.editIndex = -1;
   btnAdd.textContent = "Añadir entrada";
-  inPrice.value = "";
+
+  // ✅ Reset borra TODOS los campos de input
+  inPrice.value  = "";
+  inLev.value    = "";
+  inMargin.value = "";
   tp1Input.value = "";
   slInput.value  = "";
   tp2Input.value = "";
+
   recalc();
 });
 
