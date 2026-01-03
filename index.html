@@ -3,32 +3,38 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Bitunix — Entradas → Promedio / Liq / TP1-TP2 (iPhone)</title>
+<title>Bitunix</title>
+
 <style>
   :root{
+    /* Fondo más limpio para que Short/Long se vean bien */
     --bg1:#070d1b;
     --bg2:#0a1226;
 
-    --panel:rgba(255,255,255,.07);
-    --panel2:rgba(255,255,255,.055);
-
+    --panel:rgba(255,255,255,.06);
+    --panel2:rgba(255,255,255,.045);
     --border:rgba(255,255,255,.10);
+
     --text:#e7eefc;
     --muted:rgba(231,238,252,.65);
 
     --btnBd:rgba(255,255,255,.12);
 
-    /* Colores como tu app "Parciales" */
+    /* Colores claros para estados */
+    --ok:#22c55e;
+    --bad:#ef4444;
+    --warn: #f59e0b;
+
+    /* Short/Long (igual que tu otra app) */
     --shortDark:#1a0b0b;
     --shortOn:#7f1d1d;
+    --shortBdOn:#ef4444;
 
     --longDark:#0b1a10;
     --longOn:#166534;
+    --longBdOn:#22c55e;
 
-    --ok:#22c55e;
-    --bad:#ef4444;
-
-    --shadow: 0 14px 30px rgba(0,0,0,.45);
+    --shadow: 0 10px 25px rgba(0,0,0,.35);
     --radius:18px;
   }
 
@@ -36,24 +42,21 @@
   html,body{height:100%}
   body{
     margin:0;
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     color:var(--text);
-
-    /* Fondo más limpio para que se vean los botones */
     background:
-      radial-gradient(1200px 700px at 50% -10%, rgba(56,189,248,.10), transparent 60%),
+      radial-gradient(1100px 600px at 50% -10%, rgba(56,189,248,.10), transparent 60%),
       linear-gradient(160deg, var(--bg1), var(--bg2));
-
     padding: env(safe-area-inset-top) 14px env(safe-area-inset-bottom) 14px;
   }
 
   .wrap{max-width:740px;margin:10px auto 18px auto}
 
-  /* (Lo dejas vacío si ya quitaste el título visualmente) */
+  /* Pediste no mostrar título */
   .title{display:none}
 
   .card{
-    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.06));
+    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.045));
     border:1px solid rgba(255,255,255,.12);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
@@ -79,61 +82,66 @@
     border-radius:16px;
     padding:12px 12px;
     border:1px solid var(--btnBd);
-    color:rgba(231,238,252,.95);
+    background: rgba(0,0,0,.18);
+    color:rgba(231,238,252,.92);
     font-weight:900;
     font-size:18px;
     text-align:center;
     user-select:none;
     transition:transform .06s ease, filter .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
-    background: rgba(0,0,0,.22);
   }
   .segBtn:active{transform:scale(.99)}
 
-  /* Short/Long (más contraste) */
-  .segBtn.short{background: var(--shortDark); border-color: rgba(239,68,68,.22)}
-  .segBtn.long {background: var(--longDark);  border-color: rgba(34,197,94,.22)}
+  /* Short/Long: ahora sí se distinguen MUCHO */
+  .segBtn.short{background: var(--shortDark); border-color: rgba(239,68,68,.20)}
+  .segBtn.long {background: var(--longDark);  border-color: rgba(34,197,94,.20)}
 
   .segBtn.short.on{
     background: var(--shortOn);
-    border-color: rgba(239,68,68,.70);
-    box-shadow: 0 0 0 2px rgba(239,68,68,.18) inset, 0 6px 16px rgba(0,0,0,.25);
+    border-color: rgba(239,68,68,.75);
+    box-shadow: 0 0 0 2px rgba(239,68,68,.18) inset;
     filter:brightness(1.06);
   }
   .segBtn.long.on{
     background: var(--longOn);
-    border-color: rgba(34,197,94,.70);
-    box-shadow: 0 0 0 2px rgba(34,197,94,.18) inset, 0 6px 16px rgba(0,0,0,.25);
+    border-color: rgba(34,197,94,.75);
+    box-shadow: 0 0 0 2px rgba(34,197,94,.18) inset;
     filter:brightness(1.06);
   }
 
-  /* Estrategia: que se note más el seleccionado */
-  .segBtn.strategy{font-size:16px;font-weight:900;background: rgba(0,0,0,.25)}
+  /* Estrategia: que se note el seleccionado */
+  .segBtn.strategy{font-size:16px;font-weight:950;background: rgba(0,0,0,.20)}
   .segBtn.strategy.on{
-    background: rgba(56,189,248,.22);
-    border-color: rgba(56,189,248,.70);
-    box-shadow: 0 0 0 2px rgba(56,189,248,.14) inset;
+    background: rgba(56,189,248,.18);
+    border-color: rgba(56,189,248,.55);
+    box-shadow: 0 0 0 2px rgba(56,189,248,.12) inset;
   }
 
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 
   .field{margin:0}
-  .lab{font-size:12px;color:var(--muted);margin:0 0 6px 2px}
+  .lab{
+    font-size:12px;
+    color:var(--muted);
+    margin:0 0 6px 2px;
+  }
 
   input{
     width:100%;
     border-radius:16px;
     border:1px solid rgba(255,255,255,.10);
-    background: rgba(0,0,0,.28);
+    background: rgba(0,0,0,.22);
     color:rgba(231,238,252,.95);
     padding:12px 12px;
     font-size:18px;
     outline:none;
   }
   input::placeholder{color:rgba(231,238,252,.35)}
-  input:focus{border-color: rgba(56,189,248,.55); box-shadow:0 0 0 3px rgba(56,189,248,.16)}
+  input:focus{border-color: rgba(56,189,248,.45); box-shadow:0 0 0 3px rgba(56,189,248,.14)}
   input.invalid{
-    border-color: rgba(239,68,68,.70) !important;
-    box-shadow: 0 0 0 3px rgba(239,68,68,.20) !important;
+    border-color: rgba(239,68,68,.55) !important;
+    box-shadow: 0 0 0 3px rgba(239,68,68,.18) !important;
   }
 
   .btnRow{
@@ -147,7 +155,7 @@
     border-radius:18px;
     padding:14px 14px;
     border:1px solid rgba(255,255,255,.12);
-    font-weight:900;
+    font-weight:950;
     font-size:20px;
     cursor:pointer;
   }
@@ -162,11 +170,16 @@
   }
   .btnGhost:active, .btnPrimary:active{transform:scale(.99)}
 
-  .pillRow{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 12px 0}
+  .pillRow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:10px 0 12px 0;
+  }
   .pill{
-    background: rgba(0,0,0,.22);
+    background: rgba(0,0,0,.18);
     border:1px solid rgba(255,255,255,.10);
-    color: rgba(231,238,252,.85);
+    color: rgba(231,238,252,.82);
     padding:8px 10px;
     border-radius:999px;
     font-weight:800;
@@ -179,10 +192,10 @@
     margin-top:10px;
     overflow:auto;
     border-radius:18px;
-    border:1px solid rgba(255,255,255,.08);
-    background: rgba(0,0,0,.18);
+    border:1px solid rgba(255,255,255,.07);
+    background: rgba(0,0,0,.14);
   }
-  table{width:100%;border-collapse:collapse;min-width:560px}
+  table{width:100%;border-collapse:collapse;min-width:640px}
   th,td{
     padding:10px 10px;
     border-bottom:1px solid rgba(255,255,255,.07);
@@ -196,11 +209,13 @@
   tr:last-child td{border-bottom:none}
   tr.preview td{opacity:.78; font-style:italic}
 
-  .actions{display:flex; gap:8px; justify-content:flex-end; align-items:center}
+  .actions{
+    display:flex; gap:8px; justify-content:flex-end; align-items:center;
+  }
   .miniBtn{
     border-radius:12px;
     border:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.20);
+    background: rgba(0,0,0,.18);
     color: rgba(231,238,252,.92);
     padding:8px 10px;
     font-weight:950;
@@ -214,7 +229,7 @@
     margin-top:12px;
   }
   .kpi{
-    background: rgba(0,0,0,.20);
+    background: rgba(0,0,0,.18);
     border:1px solid rgba(255,255,255,.10);
     border-radius:18px;
     padding:12px 12px;
@@ -224,7 +239,6 @@
   .kpi .v.small{font-size:18px;font-weight:900}
   .up{color:var(--ok)}
   .down{color:var(--bad)}
-  .muted{color:var(--muted)}
 
   .note{
     margin-top:10px;
@@ -241,7 +255,7 @@
   }
   .hintUnder{
     margin:10px 2px 0 2px;
-    color: rgba(231,238,252,.72);
+    color: rgba(231,238,252,.65);
     font-size:14px;
     font-weight:800;
   }
@@ -252,6 +266,7 @@
   }
 </style>
 </head>
+
 <body>
 <div class="wrap">
   <div class="title">Bitunix — Entradas → Promedio / Liq / TP1-TP2 (iPhone)</div>
@@ -391,9 +406,9 @@
    CONFIG (Bitunix fijo)
 ========================= */
 const BITUNIX = {
-  feeRoundTrip: 0.0006,    // 0.06% sobre notional cerrado (round-trip)
-  mmr: 0.01,               // 1%
-  liqCloseFee: 0.0003      // 0.03% (solo liq)
+  feeRoundTrip: 0.0006,
+  mmr: 0.01,
+  liqCloseFee: 0.0003
 };
 
 const STRATS = {
@@ -471,7 +486,12 @@ function priceFromPct(side, avg, pct, kind){
 /* =========================
    Estado
 ========================= */
-const st = { side: "short", strat: "ema", legs: [], editIndex: -1 };
+const st = {
+  side: "short",
+  strat: "ema",
+  legs: [],
+  editIndex: -1
+};
 
 /* =========================
    UI refs
@@ -511,6 +531,9 @@ const kTP1u  = $("#kTP1u");
 const kTP2u  = $("#kTP2u");
 const kSLu   = $("#kSLu");
 
+/* =========================
+   Preview leg (no añadido)
+========================= */
 function previewLeg(){
   const p = toNum(inPrice.value);
   const L = toNum(inLev.value);
@@ -519,8 +542,12 @@ function previewLeg(){
   return null;
 }
 
+/* =========================
+   Render table
+========================= */
 function renderTable(committed, preview){
   rowsEl.innerHTML = "";
+
   const allRows = committed.map((l,i)=>({type:"real", idx:i, leg:l}));
   if(preview) allRows.push({type:"preview", idx:-1, leg:preview});
 
@@ -575,6 +602,9 @@ rowsEl.addEventListener("click",(e)=>{
   }
 });
 
+/* =========================
+   Validation helpers
+========================= */
 function setInvalid(el, on){
   el.classList.toggle("invalid", !!on);
 }
@@ -583,6 +613,7 @@ function validateTargets(side, avg, tp1, tp2, sl){
   setInvalid(tp1Input,false);
   setInvalid(tp2Input,false);
   setInvalid(slInput,false);
+
   if(!(avg>0)) return;
 
   const isLong = side==="long";
@@ -597,6 +628,9 @@ function validateTargets(side, avg, tp1, tp2, sl){
   }
 }
 
+/* =========================
+   Core recalc
+========================= */
 function recalc(){
   const prev = previewLeg();
   const usedLegs = prev ? st.legs.concat([prev]) : st.legs.slice();
@@ -621,8 +655,7 @@ function recalc(){
     kTP1u.textContent = "—";
     kTP2u.textContent = "—";
     kSLu.textContent  = "—";
-    const S0 = STRATS[st.strat];
-    ruleText.textContent = `${S0.name}: TP1 ${S0.tp1Pct}% | SL ${S0.slPct}% | Parcial ${S0.partialPct}%`;
+    ruleText.textContent = `${STRATS[st.strat].name}: TP1 ${STRATS[st.strat].tp1Pct}% | SL ${STRATS[st.strat].slPct}% | Parcial ${STRATS[st.strat].partialPct}%`;
     validateTargets(st.side, NaN, NaN, NaN, NaN);
     return;
   }
@@ -649,6 +682,7 @@ function recalc(){
     if(!(price>0) || !(closeFrac>0) || !(closeFrac<=1)) return NaN;
     const grossAll = pnlGross(st.side, t.Q, t.avg, price);
     if(!Number.isFinite(grossAll)) return NaN;
+
     const grossClosed = grossAll * closeFrac;
     const notionalClosed = (t.Q * price) * closeFrac;
     const fee = feeOnClose(notionalClosed);
@@ -685,6 +719,9 @@ function recalc(){
   kSLu.textContent  = Number.isFinite(slUsed)  ? fmt(slUsed,6)  : "—";
 }
 
+/* =========================
+   Side + Strategy toggles
+========================= */
 function setSide(side){
   st.side = side;
   btnShort.classList.toggle("on", side==="short");
@@ -703,6 +740,9 @@ btnLong.addEventListener("click",()=>setSide("long"));
 btnEma.addEventListener("click",()=>setStrat("ema"));
 btnBol.addEventListener("click",()=>setStrat("bol"));
 
+/* =========================
+   Add / Reset
+========================= */
 btnAdd.addEventListener("click",()=>{
   const p = toNum(inPrice.value);
   const L = toNum(inLev.value);
@@ -724,16 +764,25 @@ btnAdd.addEventListener("click",()=>{
 });
 
 btnReset.addEventListener("click",()=>{
+  /* RESET real: borra entradas + limpia inputs */
   st.legs = [];
   st.editIndex = -1;
   btnAdd.textContent = "Añadir entrada";
+
   inPrice.value = "";
+  inLev.value = "";
+  inMargin.value = "";
+
   tp1Input.value = "";
   slInput.value  = "";
   tp2Input.value = "";
+
   recalc();
 });
 
+/* =========================
+   Live preview inputs
+========================= */
 [inPrice, inLev, inMargin, tp1Input, slInput, tp2Input].forEach(el=>{
   el.addEventListener("input", recalc);
 });
@@ -743,6 +792,7 @@ btnReset.addEventListener("click",()=>{
   });
 });
 
+/* Init */
 setSide("short");
 setStrat("ema");
 recalc();
