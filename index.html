@@ -31,7 +31,6 @@
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     color:var(--text);
 
-    /* ===== MODO EXTREMO (más oscuro, como la otra app) ===== */
     background:
       radial-gradient(900px 520px at 50% -15%, rgba(56,189,248,.08), transparent 62%),
       radial-gradient(900px 620px at 85% 15%, rgba(34,197,94,.05), transparent 68%),
@@ -78,33 +77,32 @@
     transition:transform .06s ease, filter .15s ease, background .15s ease, border-color .15s ease;
   }
   .segBtn:active{transform:scale(.99)}
+/* ===== Short/Long INACTIVO = gris (no rojo/verde) ===== */
+.segBtn.short,
+.segBtn.long{
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.30));
+  border-color: rgba(255,255,255,.14);
+  color: rgba(231,238,252,.88);
+}
 
-  /* ===== MODO EXTREMO: Short/Long base MUY diferenciada ===== */
-  .segBtn.short{
-    background: linear-gradient(180deg, rgba(120,18,18,.55), rgba(0,0,0,.35));
-    border-color: rgba(239,68,68,.28);
-  }
-  .segBtn.long{
-    background: linear-gradient(180deg, rgba(12,75,36,.55), rgba(0,0,0,.35));
-    border-color: rgba(34,197,94,.28);
-  }
+/* ===== ACTIVO = mantiene color claro y borde fuerte ===== */
+.segBtn.short.on{
+  background: linear-gradient(180deg, rgba(220,38,38,.62), rgba(0,0,0,.28));
+  border-color: rgba(239,68,68,.95);
+  box-shadow:
+    0 0 0 2px rgba(239,68,68,.20) inset,
+    0 12px 26px rgba(239,68,68,.14);
+}
 
-  /* Seleccionado: aún más claro + borde fuerte */
-  .segBtn.short.on{
-    background: linear-gradient(180deg, rgba(220,38,38,.62), rgba(0,0,0,.28));
-    border-color: rgba(239,68,68,.85);
-    box-shadow:
-      0 0 0 2px rgba(239,68,68,.16) inset,
-      0 10px 24px rgba(239,68,68,.10);
-  }
-  .segBtn.long.on{
-    background: linear-gradient(180deg, rgba(22,163,74,.62), rgba(0,0,0,.28));
-    border-color: rgba(34,197,94,.85);
-    box-shadow:
-      0 0 0 2px rgba(34,197,94,.16) inset,
-      0 10px 24px rgba(34,197,94,.10);
-  }
-  .segBtn.on{filter:brightness(1.06)}
+.segBtn.long.on{
+  background: linear-gradient(180deg, rgba(22,163,74,.62), rgba(0,0,0,.28));
+  border-color: rgba(34,197,94,.95);
+  box-shadow:
+    0 0 0 2px rgba(34,197,94,.20) inset,
+    0 12px 26px rgba(34,197,94,.14);
+}
+
+  .segBtn.on{filter:brightness(1.08)}
 
   .segBtn.strategy{font-size:16px;font-weight:950}
   .segBtn.strategy.on{
@@ -112,6 +110,32 @@
     border-color: rgba(56,189,248,.42);
     box-shadow: 0 0 0 2px rgba(56,189,248,.10) inset;
   }
+
+  .sideBanner{
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.10);
+    padding:10px 12px;
+    font-weight:950;
+    letter-spacing:.2px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin: 2px 0 14px 0;
+    user-select:none;
+  }
+  .sideBanner.short{
+    background: linear-gradient(180deg, rgba(220,38,38,.18), rgba(0,0,0,.22));
+    border-color: rgba(239,68,68,.35);
+    box-shadow: 0 0 0 2px rgba(239,68,68,.10) inset;
+  }
+  .sideBanner.long{
+    background: linear-gradient(180deg, rgba(22,163,74,.18), rgba(0,0,0,.22));
+    border-color: rgba(34,197,94,.35);
+    box-shadow: 0 0 0 2px rgba(34,197,94,.10) inset;
+  }
+  .sideBanner .ico{font-size:16px; opacity:.95}
+  .sideBanner .txt{font-size:14px; color:rgba(231,238,252,.92)}
 
   .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 
@@ -181,7 +205,6 @@
   .pill.preview{border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10)}
   .pill.ok{border-color: rgba(34,197,94,.30); background: rgba(34,197,94,.10)}
 
-  /* TABLA */
   .tableWrap{
     margin-top:10px;
     overflow-x:auto;
@@ -220,7 +243,6 @@
     cursor:pointer;
   }
 
-  /* TP row */
   .tpRow{
     display:grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -235,7 +257,6 @@
     font-weight:800;
   }
 
-  /* KPIs */
   .kpiGrid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -270,7 +291,6 @@
     line-height:1.35;
   }
 
-  /* ======= NUEVO: sublínea consistente (Cierre + Qty) ======= */
   .subLine{
     margin-top:10px;
     display:flex;
@@ -304,7 +324,6 @@
     font-weight:950;
   }
 
-  /* ======= RESPONSIVE iPHONE: acciones siempre visibles ======= */
   @media (max-width: 480px){
     th,td{font-size:12px; padding:8px 8px;}
     .miniBtn{padding:7px 9px; font-size:12px;}
@@ -320,18 +339,8 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <div class="sectionLabel">Lado</div>
-    <div class="segRow">
-      <div id="btnShort" class="segBtn short on">Short</div>
-      <div id="btnLong"  class="segBtn long">Long</div>
-    </div>
 
-    <div class="sectionLabel">Estrategia</div>
-    <div class="segRow" style="margin-bottom:14px">
-      <div id="btnEma" class="segBtn strategy on">EMA8</div>
-      <div id="btnBol" class="segBtn strategy">Bollinger</div>
-    </div>
-
+    <!-- ===== ARRIBA: ENTRADAS ===== -->
     <div class="grid3">
       <div>
         <div class="lab">Entrada</div>
@@ -358,6 +367,7 @@
       <div class="pill ok" id="pillMode">Modo: —</div>
     </div>
 
+    <!-- ===== ARRIBA: TABLA ===== -->
     <div class="tableWrap">
       <table>
         <thead>
@@ -374,6 +384,7 @@
       </table>
     </div>
 
+    <!-- ===== ARRIBA: CIERRES ===== -->
     <div class="tpRow">
       <div>
         <div class="lab">Cierre parcial</div>
@@ -389,6 +400,25 @@
       </div>
     </div>
 
+    <!-- ===== LUEGO: ESTRATEGIA + LADO + BANNER ===== -->
+    <div class="sectionLabel" style="margin-top:14px">Estrategia</div>
+    <div class="segRow" style="margin-bottom:12px">
+      <div id="btnEma" class="segBtn strategy on">EMA8</div>
+      <div id="btnBol" class="segBtn strategy">Bollinger</div>
+    </div>
+
+    <div class="sectionLabel" style="margin-top:2px">Lado</div>
+    <div class="segRow" style="margin-bottom:10px">
+      <div id="btnShort" class="segBtn short on">Short</div>
+      <div id="btnLong"  class="segBtn long">Long</div>
+    </div>
+
+    <div id="sideBanner" class="sideBanner short">
+      <span class="ico" id="sideBannerIco" aria-hidden="true">⚠️</span>
+      <span class="txt" id="sideBannerTxt">Estás en SHORT</span>
+    </div>
+
+    <!-- ===== MÁS ABAJO: RESTO ===== -->
     <div class="hintUnder" id="ruleText">—</div>
 
     <div class="kpiGrid">
@@ -410,7 +440,6 @@
         <div class="v small" id="kRoe">—</div>
       </div>
 
-      <!-- IZQ: P/L primer cierre + (Cierre + Qty copiable) -->
       <div class="kpi" id="kPL1Card">
         <div class="t">P/L neto @ cierre parcial</div>
         <div class="v" id="kPL1">—</div>
@@ -423,21 +452,15 @@
         </div>
       </div>
 
-      <!-- DER: Precio usado primer cierre + % del precio + copiar -->
       <div class="kpi" id="kTP1UsedCard">
         <div class="t">Precio usado</div>
         <div class="v" id="kTP1u">—</div>
         <div class="subLine">
-          <div class="subPill">
-            % del precio: <span class="pctTag" id="kTP1pct">—</span>
-          </div>
-          <div class="subPill">
-            Copiar <span class="copyIco" id="copyTP1" aria-hidden="true">⧉</span>
-          </div>
+          <div class="subPill">% del precio: <span class="pctTag" id="kTP1pct">—</span></div>
+          <div class="subPill">Copiar <span class="copyIco" id="copyTP1" aria-hidden="true">⧉</span></div>
         </div>
       </div>
 
-      <!-- IZQ: P/L cierre final + (Cierre + Qty copiable) -->
       <div class="kpi" id="kPL2Card">
         <div class="t">P/L neto @ cierre final</div>
         <div class="v" id="kPL2">—</div>
@@ -450,21 +473,15 @@
         </div>
       </div>
 
-      <!-- DER: Precio usado cierre final + % del precio + copiar -->
       <div class="kpi" id="kTP2UsedCard">
         <div class="t">Precio usado</div>
         <div class="v" id="kTP2u">—</div>
         <div class="subLine">
-          <div class="subPill">
-            % del precio: <span class="pctTag" id="kTP2pct">—</span>
-          </div>
-          <div class="subPill">
-            Copiar <span class="copyIco" id="copyTP2" aria-hidden="true">⧉</span>
-          </div>
+          <div class="subPill">% del precio: <span class="pctTag" id="kTP2pct">—</span></div>
+          <div class="subPill">Copiar <span class="copyIco" id="copyTP2" aria-hidden="true">⧉</span></div>
         </div>
       </div>
 
-      <!-- IZQ: P/L SL (siempre 100% qty) -->
       <div class="kpi" id="kPLslCard">
         <div class="t">P/L neto @ SL</div>
         <div class="v" id="kPLsl">—</div>
@@ -477,17 +494,12 @@
         </div>
       </div>
 
-      <!-- DER: Precio usado SL + % del precio + copiar -->
       <div class="kpi" id="kSLUsedCard">
         <div class="t">Precio usado (SL)</div>
         <div class="v" id="kSLu">—</div>
         <div class="subLine">
-          <div class="subPill">
-            % del precio: <span class="pctTag" id="kSLpct">—</span>
-          </div>
-          <div class="subPill">
-            Copiar <span class="copyIco" id="copySL" aria-hidden="true">⧉</span>
-          </div>
+          <div class="subPill">% del precio: <span class="pctTag" id="kSLpct">—</span></div>
+          <div class="subPill">Copiar <span class="copyIco" id="copySL" aria-hidden="true">⧉</span></div>
         </div>
       </div>
     </div>
@@ -578,23 +590,14 @@ function validateTargets(side, avg, tp1, tp2, sl){
   if(Number.isFinite(sl))  setInvalid(slInput,  isLong ? (sl>=avg)  : (sl<=avg));
 }
 
-/* % del precio (vs promedio) consistente:
-   - TP/primer cierre: positivo “a favor” (long: sube, short: baja)
-   - SL: negativo “en contra” (long: baja, short: sube)
-*/
 function pctFromAvg(side, avg, price){
   if(!(avg>0 && price>0)) return NaN;
-  if(side === "long"){
-    return ((price/avg)-1)*100;
-  }else{
-    return ((avg/price)-1)*100; // esto da positivo si price < avg (TP), y negativo si price > avg (SL)
-  }
+  if(side === "long") return ((price/avg)-1)*100;
+  return ((avg/price)-1)*100;
 }
 function fmtPct(x){
   if(!Number.isFinite(x)) return "—";
-  // 2 decimales como microcopy claro
-  const s = x.toFixed(2);
-  return `${s}%`;
+  return `${x.toFixed(2)}%`;
 }
 
 const st = { side:"short", strat:"ema", legs:[], editIndex:-1 };
@@ -609,21 +612,21 @@ const ruleText=$("#ruleText");
 
 const kAvg=$("#kAvg"), kLiq=$("#kLiq"), kLevEf=$("#kLevEff"), kRoe=$("#kRoe");
 const kPL1=$("#kPL1"), kPL2=$("#kPL2"), kPLsl=$("#kPLsl");
-
 const kTP1u=$("#kTP1u"), kTP2u=$("#kTP2u"), kSLu=$("#kSLu");
 
-/* NUEVO refs sublíneas */
 const kClose1Pct=$("#kClose1Pct"), kClose1Qty=$("#kClose1Qty");
 const kClose2Pct=$("#kClose2Pct"), kClose2Qty=$("#kClose2Qty");
 const kCloseSLQty=$("#kCloseSLQty");
 
 const kTP1pct=$("#kTP1pct"), kTP2pct=$("#kTP2pct"), kSLpct=$("#kSLpct");
-
 const kPL2Card=$("#kPL2Card"), kTP2UsedCard=$("#kTP2UsedCard");
 
-/* iconos copiar */
 const copyQty1=$("#copyQty1"), copyQty2=$("#copyQty2"), copyQtySL=$("#copyQtySL");
 const copyTP1=$("#copyTP1"), copyTP2=$("#copyTP2"), copySL=$("#copySL");
+
+const sideBanner = $("#sideBanner");
+const sideBannerTxt = $("#sideBannerTxt");
+const sideBannerIco = $("#sideBannerIco");
 
 function previewLeg(){
   const p=toNum(inPrice.value), L=toNum(inLev.value), m=toNum(inMargin.value);
@@ -698,7 +701,6 @@ function recalc(){
   const S=STRATS[st.strat];
   ruleText.textContent = `${S.name}: TP ${S.tp1Pct}% | SL ${S.slPct}% | Parcial ${S.partialPct}%`;
 
-  // defaults para sublíneas (sin datos)
   kClose1Pct.textContent="—"; kClose1Qty.textContent="—";
   kClose2Pct.textContent="—"; kClose2Qty.textContent="—";
   kCloseSLQty.textContent="—";
@@ -739,14 +741,9 @@ function recalc(){
     return grossClosed-fee;
   }
 
-  // Primer cierre: SIEMPRE usa parcialFrac
   const netTP1 = Number.isFinite(tp1Used) ? netAtPrice(tp1Used, partialFrac) : NaN;
-
-  // Cierre final: sólo si el usuario escribió TP2 (si no, “no calculado”)
   const hasTP2 = Number.isFinite(tp2Used) && (String(tp2Input.value).trim() !== "");
   const netTP2 = hasTP2 ? netAtPrice(tp2Used, finalFrac) : NaN;
-
-  // SL: 100%
   const netSL  = Number.isFinite(slUsed)  ? netAtPrice(slUsed,  1.0) : NaN;
 
   const roeTP1=roe(netTP1,t.M), roeTP2=roe(netTP2,t.M), roeSL=roe(netSL,t.M);
@@ -769,14 +766,13 @@ function recalc(){
   setPL(kPL2, netTP2);
   setPL(kPLsl, netSL);
 
-  // ---- Consistencia: izquierda siempre (Cierre + Qty) ----
   const qtyTotal = t.Q;
 
   const qtyClose1 = qtyTotal * partialFrac;
   kClose1Pct.textContent = `${Math.round(partialFrac*100)}%`;
   kClose1Qty.textContent = fmt(qtyClose1,6).replace(/\u00a0/g,'');
 
-  const qtyCloseSL = qtyTotal * 1.0;
+  const qtyCloseSL = qtyTotal;
   kCloseSLQty.textContent = fmt(qtyCloseSL,6).replace(/\u00a0/g,'');
 
   if(hasTP2){
@@ -788,7 +784,6 @@ function recalc(){
     kClose2Qty.textContent = "—";
   }
 
-  // ---- Consistencia: derecha siempre (% del precio) ----
   kTP1u.textContent = Number.isFinite(tp1Used) ? fmt(tp1Used,6) : "—";
   kTP1pct.textContent = Number.isFinite(tp1Used) ? fmtPct(pctFromAvg(st.side, t.avg, tp1Used)) : "—";
 
@@ -803,15 +798,23 @@ function recalc(){
     kTP2pct.textContent = "—";
   }
 
-  // Mostrar/ocultar cierre final si no hay TP2
   kPL2Card.style.display = hasTP2 ? "" : "none";
   kTP2UsedCard.style.display = hasTP2 ? "" : "none";
+}
+
+function applySideBanner(side){
+  const isShort = side === "short";
+  sideBanner.classList.toggle("short", isShort);
+  sideBanner.classList.toggle("long", !isShort);
+  sideBannerIco.textContent = isShort ? "⚠️" : "✅";
+  sideBannerTxt.textContent = isShort ? "Estás en SHORT" : "Estás en LONG";
 }
 
 function setSide(side){
   st.side=side;
   btnShort.classList.toggle("on", side==="short");
   btnLong.classList.toggle("on", side==="long");
+  applySideBanner(side);
   recalc();
 }
 function setStrat(s){
@@ -824,9 +827,7 @@ function setStrat(s){
 btnShort.addEventListener("click",()=>setSide("short"));
 btnLong.addEventListener("click",()=>setSide("long"));
 btnEma.addEventListener("click",()=>setStrat("ema"));
-btnBol.addEventListener("click",()=> hookupBol());
-
-function hookupBol(){ setStrat("bol"); }
+btnBol.addEventListener("click",()=>setStrat("bol"));
 
 btnAdd.addEventListener("click",()=>{
   const p=toNum(inPrice.value), L=toNum(inLev.value), m=toNum(inMargin.value);
@@ -854,7 +855,6 @@ btnReset.addEventListener("click",()=>{
 
 [inPrice,inLev,inMargin,tp1Input,slInput,tp2Input].forEach(el=> el.addEventListener("input", recalc));
 
-/* Copiar por icono (consistente) */
 copyQty1.addEventListener("click", ()=> copyText($("#kClose1Qty").textContent));
 copyQty2.addEventListener("click", ()=> copyText($("#kClose2Qty").textContent));
 copyQtySL.addEventListener("click", ()=> copyText($("#kCloseSLQty").textContent));
