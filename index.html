@@ -255,22 +255,6 @@
   .down{color:var(--bad)}
   .muted{color:var(--muted)}
 
-  .copyable{cursor:pointer; user-select:none;}
-  .copyable:active{transform:scale(.995)}
-  .copyTag{
-    margin-top:8px;
-    display:inline-flex;
-    gap:6px;
-    align-items:center;
-    font-size:12px;
-    color:rgba(231,238,252,.60);
-    font-weight:850;
-  }
-  .copyDot{
-    width:6px;height:6px;border-radius:999px;background:rgba(56,189,248,.9);
-    box-shadow:0 0 0 3px rgba(56,189,248,.18);
-  }
-
   .toast{
     margin-top:10px;
     min-height:18px;
@@ -284,6 +268,40 @@
     font-size:13px;
     color: rgba(231,238,252,.62);
     line-height:1.35;
+  }
+
+  /* ======= NUEVO: sublínea consistente (Cierre + Qty) ======= */
+  .subLine{
+    margin-top:10px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    color:rgba(231,238,252,.70);
+    font-size:14px;
+    font-weight:900;
+  }
+  .subPill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 10px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.08);
+    background: rgba(0,0,0,.22);
+  }
+  .copyIco{
+    opacity:.65;
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+    user-select:none;
+  }
+  .copyIco:active{transform:scale(.98)}
+  .pctTag{
+    margin-left:8px;
+    color: rgba(56,189,248,.95);
+    font-weight:950;
   }
 
   /* ======= RESPONSIVE iPHONE: acciones siempre visibles ======= */
@@ -302,7 +320,11 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <!-- (MOVIDO) Lado ahora va más abajo, debajo de la tabla -->
+    <div class="sectionLabel">Lado</div>
+    <div class="segRow">
+      <div id="btnShort" class="segBtn short on">Short</div>
+      <div id="btnLong"  class="segBtn long">Long</div>
+    </div>
 
     <div class="sectionLabel">Estrategia</div>
     <div class="segRow" style="margin-bottom:14px">
@@ -352,25 +374,18 @@
       </table>
     </div>
 
-    <!-- ======= NUEVO ORDEN: Lado debajo de Estrategia+Inputs/Tabla (como tu imagen 2) ======= -->
-    <div class="sectionLabel" style="margin-top:12px;">Lado</div>
-    <div class="segRow">
-      <div id="btnShort" class="segBtn short on">Short</div>
-      <div id="btnLong"  class="segBtn long">Long</div>
-    </div>
-
     <div class="tpRow">
       <div>
-        <div class="lab">TP1 (precio, opc.)</div>
+        <div class="lab">Primer cierre (precio, opc.)</div>
         <input id="tp1Price" inputmode="decimal" placeholder="vacío = % estrategia" />
       </div>
       <div>
-        <div class="lab">SL (precio, opc.)</div>
+        <div class="lab">Stop Loss (precio, opc.)</div>
         <input id="slPrice" inputmode="decimal" placeholder="vacío = % estrategia" />
       </div>
       <div>
-        <div class="lab">TP2 (precio, opc.)</div>
-        <input id="tp2Price" inputmode="decimal" placeholder="cierre TOTAL 100%" />
+        <div class="lab">Cierre final (precio, opc.)</div>
+        <input id="tp2Price" inputmode="decimal" placeholder="vacío = no calculado" />
       </div>
     </div>
 
@@ -391,38 +406,89 @@
         <div class="v" id="kLevEff">—</div>
       </div>
       <div class="kpi">
-        <div class="t">ROE neto (TP1 / TP2 / SL)</div>
+        <div class="t">ROE neto (Parcial / Final / SL)</div>
         <div class="v small" id="kRoe">—</div>
       </div>
 
-      <div class="kpi">
-        <div class="t">P/L neto @ TP1</div>
+      <!-- IZQ: P/L primer cierre + (Cierre + Qty copiable) -->
+      <div class="kpi" id="kPL1Card">
+        <div class="t">P/L neto @ primer cierre</div>
         <div class="v" id="kPL1">—</div>
+        <div class="subLine">
+          <div class="subPill">Cierre: <span id="kClose1Pct">—</span></div>
+          <div class="subPill">
+            Qty: <span id="kClose1Qty">—</span>
+            <span class="copyIco" id="copyQty1" aria-hidden="true">⧉</span>
+          </div>
+        </div>
       </div>
-      <div class="kpi copyable" id="kTP1Card" data-copy="">
-        <div class="t">TP1 usado</div>
+
+      <!-- DER: Precio usado primer cierre + % del precio + copiar -->
+      <div class="kpi" id="kTP1UsedCard">
+        <div class="t">Precio usado</div>
         <div class="v" id="kTP1u">—</div>
-        <div class="copyTag"><span class="copyDot"></span>toque = copiar</div>
+        <div class="subLine">
+          <div class="subPill">
+            % del precio: <span class="pctTag" id="kTP1pct">—</span>
+          </div>
+          <div class="subPill">
+            Copiar <span class="copyIco" id="copyTP1" aria-hidden="true">⧉</span>
+          </div>
+        </div>
       </div>
 
+      <!-- IZQ: P/L cierre final + (Cierre + Qty copiable) -->
       <div class="kpi" id="kPL2Card">
-        <div class="t">P/L neto @ TP2</div>
+        <div class="t">P/L neto @ cierre final</div>
         <div class="v" id="kPL2">—</div>
-      </div>
-      <div class="kpi copyable" id="kTP2Card" data-copy="">
-        <div class="t">TP2 usado</div>
-        <div class="v" id="kTP2u">—</div>
-        <div class="copyTag"><span class="copyDot"></span>toque = copiar</div>
+        <div class="subLine">
+          <div class="subPill">Cierre: <span id="kClose2Pct">—</span></div>
+          <div class="subPill">
+            Qty: <span id="kClose2Qty">—</span>
+            <span class="copyIco" id="copyQty2" aria-hidden="true">⧉</span>
+          </div>
+        </div>
       </div>
 
-      <div class="kpi">
+      <!-- DER: Precio usado cierre final + % del precio + copiar -->
+      <div class="kpi" id="kTP2UsedCard">
+        <div class="t">Precio usado</div>
+        <div class="v" id="kTP2u">—</div>
+        <div class="subLine">
+          <div class="subPill">
+            % del precio: <span class="pctTag" id="kTP2pct">—</span>
+          </div>
+          <div class="subPill">
+            Copiar <span class="copyIco" id="copyTP2" aria-hidden="true">⧉</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- IZQ: P/L SL (siempre 100% qty) -->
+      <div class="kpi" id="kPLslCard">
         <div class="t">P/L neto @ SL</div>
         <div class="v" id="kPLsl">—</div>
+        <div class="subLine">
+          <div class="subPill">Cierre: <span id="kCloseSLPct">100%</span></div>
+          <div class="subPill">
+            Qty: <span id="kCloseSLQty">—</span>
+            <span class="copyIco" id="copyQtySL" aria-hidden="true">⧉</span>
+          </div>
+        </div>
       </div>
-      <div class="kpi copyable" id="kSLCard" data-copy="">
-        <div class="t">SL usado</div>
+
+      <!-- DER: Precio usado SL + % del precio + copiar -->
+      <div class="kpi" id="kSLUsedCard">
+        <div class="t">Precio usado (SL)</div>
         <div class="v" id="kSLu">—</div>
-        <div class="copyTag"><span class="copyDot"></span>toque = copiar</div>
+        <div class="subLine">
+          <div class="subPill">
+            % del precio: <span class="pctTag" id="kSLpct">—</span>
+          </div>
+          <div class="subPill">
+            Copiar <span class="copyIco" id="copySL" aria-hidden="true">⧉</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -512,6 +578,25 @@ function validateTargets(side, avg, tp1, tp2, sl){
   if(Number.isFinite(sl))  setInvalid(slInput,  isLong ? (sl>=avg)  : (sl<=avg));
 }
 
+/* % del precio (vs promedio) consistente:
+   - TP/primer cierre: positivo “a favor” (long: sube, short: baja)
+   - SL: negativo “en contra” (long: baja, short: sube)
+*/
+function pctFromAvg(side, avg, price){
+  if(!(avg>0 && price>0)) return NaN;
+  if(side === "long"){
+    return ((price/avg)-1)*100;
+  }else{
+    return ((avg/price)-1)*100; // esto da positivo si price < avg (TP), y negativo si price > avg (SL)
+  }
+}
+function fmtPct(x){
+  if(!Number.isFinite(x)) return "—";
+  // 2 decimales como microcopy claro
+  const s = x.toFixed(2);
+  return `${s}%`;
+}
+
 const st = { side:"short", strat:"ema", legs:[], editIndex:-1 };
 
 const btnShort=$("#btnShort"), btnLong=$("#btnLong"), btnEma=$("#btnEma"), btnBol=$("#btnBol");
@@ -524,8 +609,21 @@ const ruleText=$("#ruleText");
 
 const kAvg=$("#kAvg"), kLiq=$("#kLiq"), kLevEf=$("#kLevEff"), kRoe=$("#kRoe");
 const kPL1=$("#kPL1"), kPL2=$("#kPL2"), kPLsl=$("#kPLsl");
+
 const kTP1u=$("#kTP1u"), kTP2u=$("#kTP2u"), kSLu=$("#kSLu");
-const kPL2Card=$("#kPL2Card"), kTP2Card=$("#kTP2Card"), kTP1Card=$("#kTP1Card"), kSLCard=$("#kSLCard");
+
+/* NUEVO refs sublíneas */
+const kClose1Pct=$("#kClose1Pct"), kClose1Qty=$("#kClose1Qty");
+const kClose2Pct=$("#kClose2Pct"), kClose2Qty=$("#kClose2Qty");
+const kCloseSLQty=$("#kCloseSLQty");
+
+const kTP1pct=$("#kTP1pct"), kTP2pct=$("#kTP2pct"), kSLpct=$("#kSLpct");
+
+const kPL2Card=$("#kPL2Card"), kTP2UsedCard=$("#kTP2UsedCard");
+
+/* iconos copiar */
+const copyQty1=$("#copyQty1"), copyQty2=$("#copyQty2"), copyQtySL=$("#copyQtySL");
+const copyTP1=$("#copyTP1"), copyTP2=$("#copyTP2"), copySL=$("#copySL");
 
 function previewLeg(){
   const p=toNum(inPrice.value), L=toNum(inLev.value), m=toNum(inMargin.value);
@@ -598,13 +696,19 @@ function recalc(){
   renderTable(st.legs, prev);
 
   const S=STRATS[st.strat];
-  ruleText.textContent = `${S.name}: TP1 ${S.tp1Pct}% | SL ${S.slPct}% | Parcial ${S.partialPct}%`;
+  ruleText.textContent = `${S.name}: TP ${S.tp1Pct}% | SL ${S.slPct}% | Parcial ${S.partialPct}%`;
+
+  // defaults para sublíneas (sin datos)
+  kClose1Pct.textContent="—"; kClose1Qty.textContent="—";
+  kClose2Pct.textContent="—"; kClose2Qty.textContent="—";
+  kCloseSLQty.textContent="—";
+  kTP1pct.textContent="—"; kTP2pct.textContent="—"; kSLpct.textContent="—";
 
   if(!(t.Q>0 && t.avg>0 && t.M>0)){
     kAvg.textContent="—"; kLiq.textContent="—"; kLevEf.textContent="—"; kRoe.textContent="—";
     kPL1.textContent="—"; kPL2.textContent="—"; kPLsl.textContent="—";
     kTP1u.textContent="—"; kTP2u.textContent="—"; kSLu.textContent="—";
-    kPL2Card.style.display=""; kTP2Card.style.display="";
+    kPL2Card.style.display=""; kTP2UsedCard.style.display="";
     validateTargets(st.side, NaN, NaN, NaN, NaN);
     return;
   }
@@ -622,7 +726,9 @@ function recalc(){
   const liq=liquidation(st.side, t.Q, t.avg, t.M);
   const levEff= (t.M>0 && t.notional>0) ? (t.notional/t.M) : NaN;
 
-  const partialFrac=S.partialPct/100;
+  const partialFrac = Math.min(1, Math.max(0, S.partialPct/100));
+  const finalFrac = (partialFrac < 1) ? (1 - partialFrac) : 1;
+
   function netAtPrice(price, closeFrac){
     if(!(price>0) || !(closeFrac>0) || closeFrac>1) return NaN;
     const grossAll=pnlGross(st.side, t.Q, t.avg, price);
@@ -633,8 +739,14 @@ function recalc(){
     return grossClosed-fee;
   }
 
+  // Primer cierre: SIEMPRE usa parcialFrac
   const netTP1 = Number.isFinite(tp1Used) ? netAtPrice(tp1Used, partialFrac) : NaN;
-  const netTP2 = Number.isFinite(tp2Used) ? netAtPrice(tp2Used, 1.0) : NaN;
+
+  // Cierre final: sólo si el usuario escribió TP2 (si no, “no calculado”)
+  const hasTP2 = Number.isFinite(tp2Used) && (String(tp2Input.value).trim() !== "");
+  const netTP2 = hasTP2 ? netAtPrice(tp2Used, finalFrac) : NaN;
+
+  // SL: 100%
   const netSL  = Number.isFinite(slUsed)  ? netAtPrice(slUsed,  1.0) : NaN;
 
   const roeTP1=roe(netTP1,t.M), roeTP2=roe(netTP2,t.M), roeSL=roe(netSL,t.M);
@@ -657,17 +769,43 @@ function recalc(){
   setPL(kPL2, netTP2);
   setPL(kPLsl, netSL);
 
-  kTP1u.textContent=Number.isFinite(tp1Used)?fmt(tp1Used,6):"—";
-  kTP2u.textContent=Number.isFinite(tp2Used)?fmt(tp2Used,6):"—";
-  kSLu.textContent =Number.isFinite(slUsed)?fmt(slUsed,6):"—";
+  // ---- Consistencia: izquierda siempre (Cierre + Qty) ----
+  const qtyTotal = t.Q;
 
-  const hasTP2 = Number.isFinite(tp2Used) && (String(tp2Input.value).trim() !== "");
+  const qtyClose1 = qtyTotal * partialFrac;
+  kClose1Pct.textContent = `${Math.round(partialFrac*100)}%`;
+  kClose1Qty.textContent = fmt(qtyClose1,6).replace(/\u00a0/g,'');
+
+  const qtyCloseSL = qtyTotal * 1.0;
+  kCloseSLQty.textContent = fmt(qtyCloseSL,6).replace(/\u00a0/g,'');
+
+  if(hasTP2){
+    const qtyClose2 = qtyTotal * finalFrac;
+    kClose2Pct.textContent = `${Math.round(finalFrac*100)}%`;
+    kClose2Qty.textContent = fmt(qtyClose2,6).replace(/\u00a0/g,'');
+  }else{
+    kClose2Pct.textContent = "—";
+    kClose2Qty.textContent = "—";
+  }
+
+  // ---- Consistencia: derecha siempre (% del precio) ----
+  kTP1u.textContent = Number.isFinite(tp1Used) ? fmt(tp1Used,6) : "—";
+  kTP1pct.textContent = Number.isFinite(tp1Used) ? fmtPct(pctFromAvg(st.side, t.avg, tp1Used)) : "—";
+
+  kSLu.textContent  = Number.isFinite(slUsed) ? fmt(slUsed,6) : "—";
+  kSLpct.textContent = Number.isFinite(slUsed) ? fmtPct(pctFromAvg(st.side, t.avg, slUsed)) : "—";
+
+  if(hasTP2){
+    kTP2u.textContent = fmt(tp2Used,6);
+    kTP2pct.textContent = fmtPct(pctFromAvg(st.side, t.avg, tp2Used));
+  }else{
+    kTP2u.textContent = "—";
+    kTP2pct.textContent = "—";
+  }
+
+  // Mostrar/ocultar cierre final si no hay TP2
   kPL2Card.style.display = hasTP2 ? "" : "none";
-  kTP2Card.style.display = hasTP2 ? "" : "none";
-
-  kTP1Card.dataset.copy = Number.isFinite(tp1Used)?fmt(tp1Used,6).replace(/\u00a0/g,''):"";
-  kSLCard.dataset.copy  = Number.isFinite(slUsed)?fmt(slUsed,6).replace(/\u00a0/g,''):"";
-  kTP2Card.dataset.copy = hasTP2?fmt(tp2Used,6).replace(/\u00a0/g,''):"";
+  kTP2UsedCard.style.display = hasTP2 ? "" : "none";
 }
 
 function setSide(side){
@@ -686,7 +824,9 @@ function setStrat(s){
 btnShort.addEventListener("click",()=>setSide("short"));
 btnLong.addEventListener("click",()=>setSide("long"));
 btnEma.addEventListener("click",()=>setStrat("ema"));
-btnBol.addEventListener("click",()=>setStrat("bol"));
+btnBol.addEventListener("click",()=> hookupBol());
+
+function hookupBol(){ setStrat("bol"); }
 
 btnAdd.addEventListener("click",()=>{
   const p=toNum(inPrice.value), L=toNum(inLev.value), m=toNum(inMargin.value);
@@ -714,9 +854,14 @@ btnReset.addEventListener("click",()=>{
 
 [inPrice,inLev,inMargin,tp1Input,slInput,tp2Input].forEach(el=> el.addEventListener("input", recalc));
 
-[kTP1Card,kSLCard,kTP2Card].forEach(card=>{
-  card.addEventListener("click", ()=> copyText(card.dataset.copy || ""));
-});
+/* Copiar por icono (consistente) */
+copyQty1.addEventListener("click", ()=> copyText($("#kClose1Qty").textContent));
+copyQty2.addEventListener("click", ()=> copyText($("#kClose2Qty").textContent));
+copyQtySL.addEventListener("click", ()=> copyText($("#kCloseSLQty").textContent));
+
+copyTP1.addEventListener("click", ()=> copyText($("#kTP1u").textContent));
+copyTP2.addEventListener("click", ()=> copyText($("#kTP2u").textContent));
+copySL.addEventListener("click", ()=> copyText($("#kSLu").textContent));
 
 setSide("short");
 setStrat("ema");
